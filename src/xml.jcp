@@ -25,6 +25,9 @@
 	<libraries/>
 	<files>
 		<include>
+			<folderitem>
+				<path>example</path>
+			</folderitem>
 			<fileitem>
 				<path>Pair.java</path>
 			</fileitem>
@@ -36,6 +39,10 @@
 			</fileitem>
 			<fileitem>
 				<path>XMLParser.java</path>
+			</fileitem>
+			<fileitem>
+				<path>example\FindTag.java</path>
+				<folder>example</folder>
 			</fileitem>
 		</include>
 	</files>

@@ -8,38 +8,42 @@
 		<project>
 			<label>xml</label>
 			<showfiles>false</showfiles>
+			<folderitem>
+				<path>..\src\example</path>
+				<dir>example</dir>
+			</folderitem>
 		</project>
 	</projects>
 	<open_files>
 		<docitem>
-			<path>..\..\..\..\..\Program Files\Xinox Software\JCreatorV4LE\start.zip</path>
-			<source>false</source>
-			<index>0</index>
-			<active>false</active>
-		</docitem>
-		<docitem>
 			<path>..\src\XMLGrep.java</path>
 			<source>true</source>
-			<index>1</index>
+			<index>0</index>
 			<active>false</active>
 		</docitem>
 		<docitem>
 			<path>..\src\Pair.java</path>
 			<source>true</source>
-			<index>2</index>
+			<index>1</index>
 			<active>false</active>
 		</docitem>
 		<docitem>
 			<path>..\..\..\..\..\java\docs\api\java\util\ArrayList.html</path>
 			<source>false</source>
-			<index>3</index>
+			<index>2</index>
 			<active>false</active>
 		</docitem>
 		<docitem>
 			<path>..\src\XMLParser.java</path>
 			<source>true</source>
-			<index>4</index>
+			<index>3</index>
 			<active>true</active>
+		</docitem>
+		<docitem>
+			<path>..\src\example\FindTag.java</path>
+			<source>true</source>
+			<index>4</index>
+			<active>false</active>
 		</docitem>
 	</open_files>
 </workspace_user>
