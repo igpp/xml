@@ -9,11 +9,14 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.transform.stream.StreamResult;
 
 //import java.io.*;
+import java.io.Reader;
 import java.io.File;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.FileInputStream;
 
 // import java.net.*;
 import java.net.URL;
@@ -33,7 +36,7 @@ import javax.servlet.jsp.JspWriter;
  */
 public class Transform 
 {
-	String	mVersion = "1.0.1";
+	String	mVersion = "1.0.2";
 	/** 
     * Command-line interface
 	 * 
@@ -53,7 +56,11 @@ public class Transform
 		}
 		
 		try {
-			me.perform(args[0], args[1], System.out);
+			if(args[0].startsWith("http:")) {
+				me.perform(getURLSource(args[0]), args[1], System.out);
+			} else {
+				me.perform(args[0], args[1], System.out);
+			}
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -121,6 +128,24 @@ public class Transform
 		
 		return source;
 	}
+
+	/** 
+    * Use an XML style sheet to transform an XML document and write the results
+    * to an {@link PrintWriter}.
+    *
+	 * @param xmlStream    	the {@link StreamSource} to the XML text.
+	 * @param xslFile		the pathname to the XML stylesheet file.
+	 * @param outStream		the {@link PrintStream} to write the results.
+    *
+    * @since           1.0
+    **/
+	static public void perform(StreamSource xmlStream, String xslFile, PrintStream outStream)
+		throws Exception
+	{
+		Transformer transformer = getTransformer(xslFile);
+		
+		transformer.transform(xmlStream, new StreamResult(outStream));
+	}
 	
 	/** 
     * Use an XML style sheet to transform an XML document and write the results
@@ -135,10 +160,11 @@ public class Transform
 	static public void perform(String xmlFile, String xslFile, PrintWriter outWriter)
 		throws Exception
 	{
-		Transformer transformer = getTransformer(xslFile);
-
-		transformer.transform(new StreamSource(xmlFile), new StreamResult(outWriter)
-	   );
+		perform(new FileInputStream(xmlFile), xslFile, outWriter);
+		
+		// Transformer transformer = getTransformer(xslFile);
+		// 
+		// transformer.transform(new StreamSource(xmlFile), new StreamResult(outWriter));
 	}
 
 	/** 
@@ -156,8 +182,10 @@ public class Transform
 	{
 		Transformer transformer = getTransformer(xslFile);
 		
-		transformer.transform(new StreamSource(xmlStream), new StreamResult(outWriter)
-		   );
+		Reader reader = new InputStreamReader(xmlStream, "UTF-8");
+
+		// transformer.transform(new StreamSource(xmlStream), new StreamResult(outWriter));
+		transformer.transform(new StreamSource(reader), new StreamResult(outWriter));
 	}
 	
 	/** 
@@ -175,7 +203,10 @@ public class Transform
 	{
 		Transformer transformer = getTransformer(xslFile);
 		
-		transformer.transform(new StreamSource(xmlFile), new StreamResult(outStream));
+		FileInputStream stream = new FileInputStream(xmlFile);
+		Reader reader = new InputStreamReader(stream, "UTF-8");
+		
+		transformer.transform(new StreamSource(reader), new StreamResult(outStream));
 	}
 	
 	/** 
@@ -193,9 +224,11 @@ public class Transform
 		throws Exception
 	{
 		Transformer transformer = getTransformer(xslFile);
-		
-		transformer.transform(new StreamSource(xmlFile), new StreamResult(outStream)
-		   );
+
+		FileInputStream stream = new FileInputStream(xmlFile);
+		Reader reader = new InputStreamReader(stream, "UTF-8");
+
+		transformer.transform(new StreamSource(reader), new StreamResult(outStream));
 	}
 	
 	/** 

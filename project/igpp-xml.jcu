@@ -16,34 +16,10 @@
 	</projects>
 	<open_files>
 		<docitem>
-			<path>..\src\XMLGrep.java</path>
+			<path>..\src\Transform.java</path>
 			<source>true</source>
 			<index>0</index>
-			<active>false</active>
-		</docitem>
-		<docitem>
-			<path>..\src\Pair.java</path>
-			<source>true</source>
-			<index>1</index>
-			<active>false</active>
-		</docitem>
-		<docitem>
-			<path>..\..\..\..\..\java\docs\api\java\util\ArrayList.html</path>
-			<source>false</source>
-			<index>2</index>
-			<active>false</active>
-		</docitem>
-		<docitem>
-			<path>..\src\XMLParser.java</path>
-			<source>true</source>
-			<index>3</index>
 			<active>true</active>
-		</docitem>
-		<docitem>
-			<path>..\src\example\FindTag.java</path>
-			<source>true</source>
-			<index>4</index>
-			<active>false</active>
 		</docitem>
 	</open_files>
 </workspace_user>
