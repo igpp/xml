@@ -287,7 +287,7 @@ public class XMLGrep {
    /**
     * Generate an xpath/value index.
     *
-    * @param list     The Arraylist of riplet elements to populate.
+    * @param list     The Arraylist of triplet elements to populate.
     * @param node     the starting Node in the Document.
     * @param xpath    the XPath to the starting node.
     *
@@ -907,7 +907,7 @@ public class XMLGrep {
     }
     
 	/**
- 	 * Prints the XML document to the currently define System.out.
+ 	 * Prints the XML document to the currently defined System.out.
  	 * Each node is labeled with its XPath.
 	 *
     * @param node     the starting Node in the document to print.

@@ -16,9 +16,21 @@
 	</projects>
 	<open_files>
 		<docitem>
-			<path>..\src\Transform.java</path>
+			<path>..\src\XMLGrep.java</path>
 			<source>true</source>
 			<index>0</index>
+			<active>false</active>
+		</docitem>
+		<docitem>
+			<path>..\src\Pair.java</path>
+			<source>true</source>
+			<index>1</index>
+			<active>false</active>
+		</docitem>
+		<docitem>
+			<path>..\src\XMLParser.java</path>
+			<source>true</source>
+			<index>2</index>
 			<active>true</active>
 		</docitem>
 	</open_files>
