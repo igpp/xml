@@ -17,5 +17,4 @@
     <property name="release.local"   value="/java/jre/lib/ext" />
     <property name="release.jar"   value="/projects/jar/igpp" />
     <property name="release.dist"   value="/projects/dist/igpp" />
-    
 </project>
