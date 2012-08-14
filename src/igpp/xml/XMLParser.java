@@ -10,16 +10,11 @@ import java.io.ByteArrayInputStream;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.AbstractSet;
 
 import java.lang.StringBuffer;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Comment;
-import org.w3c.dom.Text;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -52,6 +47,7 @@ public class XMLParser {
 	private Document  mDocument;
 	private String    mPathName = "";
 	private String    mClassName = null;
+	private Integer	  mIndent = new Integer(4);
 	
 	private ArrayList<String>	mRequired = new ArrayList<String>();
 	
@@ -230,9 +226,9 @@ public class XMLParser {
     }
 
     /** 
-     * Parses a string containing XML into its constitute elments.
+     * Parses a string containing XML into its constitute elements.
      *
-     * @param text	the String conting the XML text.
+     * @param text	the String containing the XML text.
      *
      * @return          <code>true</code> if the file could be opened;
      *                  <code>false</code> otherwise.
@@ -242,8 +238,8 @@ public class XMLParser {
     public boolean parseXMLString(String text) 
        throws Exception 
     {
-    	 ByteArrayInputStream stream = new ByteArrayInputStream(text.getBytes());
-       return parseXML(stream);
+    	ByteArrayInputStream stream = new ByteArrayInputStream(text.getBytes());
+    	return parseXML(stream);
     }
 
     /** 
@@ -277,6 +273,39 @@ public class XMLParser {
     }
 
     /** 
+     * Generates an XML representation of the content and return it as a string. 
+     * 
+     * @since           1.0.3
+     **/
+    public String toString()  
+    {
+        StringWriter out = new StringWriter();
+        
+    	try {
+	        //set up a transformer
+	        TransformerFactory transfac = TransformerFactory.newInstance();
+	        try { // Need for Java 1.5 to work properly
+	           transfac.setAttribute("indent-number", mIndent);
+	        } catch(Exception ie) {
+	        }
+	        Transformer trans = transfac.newTransformer(getDefaultStyleSheet());
+	
+	        // Set up desired output format
+	        trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+	        trans.setOutputProperty(OutputKeys.INDENT, "yes");
+	
+	        // create string from xml tree
+	        StreamResult result = new StreamResult(out);
+	        DOMSource source = new DOMSource(mDocument);
+	
+	        trans.transform(source, result);
+    	} catch(Exception e) {
+    		// Do nothing
+    	}
+        return out.toString();
+    }
+    
+    /** 
      * Generates an XML representation of the label and stream it to the 
      * print stream.
      * 
@@ -307,6 +336,45 @@ public class XMLParser {
    }
 
     /** 
+     * Trim all text nodes by removing leading and trailing spaces.
+     * @since           1.0
+     **/
+    public void trim()
+       throws Exception
+    {
+        Node node;
+        DOMSource  source = new DOMSource(mDocument);
+        
+        node = source.getNode();
+        trimNode(node);
+    }
+
+    /** 
+     * Trim the text in a node by removing leading and trailing spaces.
+     * Does the same for all children nodes.
+     * 
+     * @param node     the {@link Node} of the document.
+     *
+     * @since           1.0
+     **/
+    public void trimNode(Node node)
+    {
+       Node  child;
+       Node  sibling;
+       if(node.getNodeType() == Node.TEXT_NODE) node.setNodeValue(node.getNodeValue().trim());
+       if(node.hasChildNodes()) { // Output all children
+          child = node.getFirstChild();
+          sibling = child;
+          while(sibling != null) {
+             trimNode(sibling);
+             sibling = sibling.getNextSibling();
+          }
+       }
+    }
+
+
+    
+    /** 
      * Dump the CData sections of the XML
      * 
      * @param out     the stream to print the element to.
@@ -334,7 +402,7 @@ public class XMLParser {
     {
        Node  child;
        Node  sibling;
-       out.println(node.getNodeType() + ": " + node.getNodeName() + ": " + node.getNodeValue());
+       out.println(node.getNodeType() + ": " + node.getNodeName() + ": \"" + node.getNodeValue() + "\"");
        if(node.hasChildNodes()) { // Output all children
           child = node.getFirstChild();
           sibling = child;
@@ -443,7 +511,6 @@ public class XMLParser {
        String   name;
        Node  child;
        Node  sibling;
-       Method   method;
 
        if(node == null) return;
 
@@ -755,13 +822,11 @@ public class XMLParser {
 	static public String getBranchText(Node node)
 	throws Exception
 	{
-		Node  child;
 		StringBuffer   buffer;
 		int      n;
 		
 		if(!node.hasChildNodes()) return "";
 		
-		child = node.getFirstChild();
 		StringWriter   writer = new StringWriter();
 		
 		TransformerFactory transfac = TransformerFactory.newInstance();
@@ -814,6 +879,23 @@ public class XMLParser {
 		return "";
 	}
      
+	/**
+	* Return the indent value.
+	*
+	* @since           1.0.3
+	**/
+	public Integer getIndent() { return mIndent; }
+     
+	/**
+	* Set the indent value.
+	*
+	* @since           1.0.3
+	**/
+	public void setIndent(int n) 
+	{
+		mIndent = n;
+	}
+	
 	/**
 	* Return a string with content enclosed in tags with the passed name.
 	*

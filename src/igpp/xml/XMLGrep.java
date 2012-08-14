@@ -5,7 +5,6 @@
  * <p>
  * Development funded by NASA's VMO project at UCLA.
  *
- * @author Todd King
  * @version 1.00 2009-06-04
  */
 
@@ -37,11 +36,10 @@ import org.apache.commons.cli.ParseException;
 /**
  * Extract values from XML files using simplified XPath syntax that can contain regular expressions.
  *
- * @author Todd King
- * @author UCLA/IGPP
  * @version     1.0.0
  * @since     1.0.0
  **/
+@SuppressWarnings("static-access")
 public class XMLGrep {
 	private String    mVersion = "1.0.1";
 	
@@ -49,6 +47,7 @@ public class XMLGrep {
 	private static boolean mXMLOutput = false;
 	
 	private ArrayList<String> mTagStack = new ArrayList<String>();
+	private ArrayList<Pair> mPairList = new ArrayList<Pair>();
 	
 	private static String mIndent = "   ";	// Amount to indent each level of nested XML tags
 	
@@ -58,8 +57,6 @@ public class XMLGrep {
 	/** 
 	* Creates an instance of a XML 
 	*
-	* @author Todd King
-	* @author UCLA/IGPP
 	* @since           1.0
 	**/
 	public XMLGrep() 
@@ -75,13 +72,10 @@ public class XMLGrep {
 	/**
 	* Entry point for testing
 	*
-	* @author Todd King
-	* @author UCLA/IGPP
 	* @since           1.0
 	**/
 	public static void main(String args[]) 
 	{
-		int      output = 1; // Default is XML
 		XMLGrep me = new XMLGrep();
 		ArrayList<Pair> list = new ArrayList<Pair>();
 		String	find = null;
@@ -112,7 +106,7 @@ public class XMLGrep {
 					if(valueList.isEmpty()) {
 						System.out.println("Nothing found");
 					}
-					if(mXMLOutput) {	me.writeXMLTagged(System.out, valueList);} 
+					if(me.mXMLOutput) {	me.writeXMLTagged(System.out, valueList);} 
 					else { me.writeTagged(System.out, valueList); }
 				} else if(node != null) {	// Find nodes
 					ArrayList<String> valueList = me.getChildNodeNames(list, node);
@@ -129,7 +123,7 @@ public class XMLGrep {
 						startAt = me.findFirstElement(list, extract, startAt);
 						if(startAt == -1) break;	// Done
 						endAt = me.findLastElement(list, extract, startAt);
-						if(me.mXMLOutput) { me.writeTagged(System.out, list, startAt, endAt); }
+						if(mXMLOutput) { me.writeTagged(System.out, list, startAt, endAt); }
 						else { me.writeTagged(System.out, list, startAt, endAt); }
 						startAt = endAt + 1;
 					}
@@ -191,17 +185,36 @@ public class XMLGrep {
 	}
 	
 	/** 
-	* Parses a file containing XML into its constitute elments.
+	* Parses a file containing XML into its constitute elements.
 	* The path and name of the file are passed to the method which is
 	* opened and parsed.
 	*
 	* @param pathName  the fully qualified path and name of the file to parse.
 	*
-	* @return          A Document containg the pased representation.
+	* @return          A Document containing the parsed representation.
 	*                  null if parsing failed.
 	*
-	* @author Todd King
-	* @author UCLA/IGPP
+	* @since           1.0
+	**/
+	public Document open(String pathName) 
+	 throws Exception 
+	{
+		Document document = parse(pathName);
+		makeIndex(mPairList, document, "");
+		
+		return document;
+	}
+	
+	/** 
+	* Parses a file containing XML into its constitute elements.
+	* The path and name of the file are passed to the method which is
+	* opened and parsed.
+	*
+	* @param pathName  the fully qualified path and name of the file to parse.
+	*
+	* @return          A Document containing the parsed representation.
+	*                  null if parsing failed.
+	*
 	* @since           1.0
 	**/
 	public static Document parse(String pathName) 
@@ -228,15 +241,13 @@ public class XMLGrep {
 	}
 
     /** 
-     * Parses a string containing XML into its constitute elments.
+     * Parses a string containing XML into its constitute elements.
      *
-     * @param text	the String conting the XML text.
+     * @param text	the String containing the XML text.
      *
      * @return          <code>true</code> if the file could be opened;
      *                  <code>false</code> otherwise.
      *
-     * @author Todd King
-     * @author UCLA/IGPP
      * @since           1.0
      **/
     public static Document parseString(String text) 
@@ -247,17 +258,15 @@ public class XMLGrep {
     }
 
     /** 
-     * Parses a file containing XML into its constitute elments.
+     * Parses a file containing XML into its constitute elements.
      * The file to parse must be previously opened and a InputStream
      * pointing to the file is passed.
      *
      * @param stream     a connection to a pre-opened file.
      *
-     * @return          A Document containg the pased representation.
+     * @return          A Document containing the parsed representation.
      *                  null if parsing failed.
      *
-     * @author Todd King
-     * @author UCLA/IGPP
      * @since           1.0
      **/
     public static Document parse(InputStream stream)  
@@ -291,8 +300,6 @@ public class XMLGrep {
     * @param node     the starting Node in the Document.
     * @param xpath    the XPath to the starting node.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
     **/
     public static void makeIndex(ArrayList<Pair> list, Node node, String xpath)
@@ -328,8 +335,6 @@ public class XMLGrep {
     * @param node     the starting Node in the Document.
     * @param xpath    the XPath to the starting node.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
     **/
     public static ArrayList<Pair> makeIndex(Node node, String xpath)
@@ -352,8 +357,6 @@ public class XMLGrep {
     *
     * @return          an ArrayList of Nodes which are children of the passed Node.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
     **/
 	 public static ArrayList<Node> getChildNodes(Node node)
@@ -381,8 +384,6 @@ public class XMLGrep {
     *
     * @return          an ArrayList of Nodes which are children of the passed Node.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
     **/
 	 public static ArrayList<Node> getNode(Node node)
@@ -405,6 +406,24 @@ public class XMLGrep {
     
 	/**
  	 * Finds the first value that has an XPath which matches a given pattern.
+ 	 * Works with XML documents opened with a call to "open()".
+	 *
+    * @param xpath    The XPath of the value to look for. 
+    *                 The XPath can contain regular expressions.
+    * @param defaultValue     the default value to return if no matching item is found.
+    *
+    * @return          a String containing the value or the default value if
+    *                  no matching XPath is found.
+    *
+	 * @since           1.0
+	**/
+    public String getFirstValue(String xpath, String defaultValue)
+    {
+    	return getFirstValue(mPairList, xpath, defaultValue);
+    }
+    
+	/**
+ 	 * Finds the first value that has an XPath which matches a given pattern.
 	 *
     * @param list     a list of XPath/Value pairs.
     * @param xpath    The XPath of the value to look for. 
@@ -414,8 +433,6 @@ public class XMLGrep {
     * @return          a String containing the value or the default value if
     *                  no matching XPath is found.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
 	**/
     public static String getFirstValue(ArrayList<Pair> list, String xpath, String defaultValue)
@@ -431,6 +448,23 @@ public class XMLGrep {
     
 	/**
  	 * Finds all values that have an XPath which matches a given pattern.
+ 	 * Works with XML documents opened with a call to "open()".
+	 *
+    * @param xpath    The XPath of the value to look for. 
+    *                 The XPath can contain regular expressions.
+    *
+    * @return          a String containing the value or the default value if
+    *                  no matching XPath is found.
+    *
+	 * @since           1.0
+	**/
+    public ArrayList<String> getValues(String xpath)
+    {
+    	return getValues(mPairList, xpath);
+    }
+	    
+	/**
+ 	 * Finds all values that have an XPath which matches a given pattern.
 	 *
     * @param list     a list of XPath/Value pairs.
     * @param xpath    The XPath of the value to look for. 
@@ -439,8 +473,6 @@ public class XMLGrep {
     * @return          a String containing the value or the default value if
     *                  no matching XPath is found.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
 	**/
     public static ArrayList<String> getValues(ArrayList<Pair> list, String xpath)
@@ -466,8 +498,6 @@ public class XMLGrep {
     * @return          a String containing the value or the default value if
     *                  no matching XPath is found.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
 	**/
     public static ArrayList<Pair> getPairs(ArrayList<Pair> list, String xpath)
@@ -490,8 +520,6 @@ public class XMLGrep {
     *
     * @return          a String containing the words in the list.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
 	**/
     public static ArrayList<String> getWords(ArrayList<Pair> list)
@@ -525,8 +553,6 @@ public class XMLGrep {
     * @param match	 a regular expression for the portion of the path to change.
     * @param set		 the value to substitute for the matched pattern.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
 	**/
     public static void changePath(ArrayList<Pair> list, String match, String set)
@@ -543,8 +569,6 @@ public class XMLGrep {
 	/**
 	* Determine if a word is a common word. 
 	*
-	* @author Todd King
-	* @author UCLA/IGPP
 	* @since           1.0
 	 **/
 	public static boolean isCommonWord(String value) 
@@ -590,8 +614,6 @@ public class XMLGrep {
     * @return          a String containing the value or the default value if
     *                  no matching XPath is found.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
 	**/
     public static ArrayList<String> getChildNodeNames(ArrayList<Pair> list, String xpath)
@@ -624,8 +646,6 @@ public class XMLGrep {
     * @return          a String containing the value or the default value if
     *                  no matching XPath is found.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
 	**/
     public static ArrayList<Integer> getChildNodeIndex(ArrayList<Pair> list, String xpath)
@@ -646,7 +666,22 @@ public class XMLGrep {
     	return valueList;
     }
     
-   
+	/**
+ 	 * Extract a copy of a portion of a ArrayList.
+ 	 * Works with XML documents opened with a call to "open()".
+	 *
+    * @param startAt  the index to start the extract.
+    * @param endAt  the index to end the extract.
+    *
+    * @return          an ArrayList will all items between startAt and endAt.
+    *
+	 * @since           1.0
+	**/
+    public ArrayList<Pair> getSegment(int startAt, int endAt)
+    {
+    	return getSegment(mPairList, startAt, endAt);
+    }
+    
 	/**
  	 * Extract a copy of a portion of a ArrayList.
 	 *
@@ -656,8 +691,6 @@ public class XMLGrep {
     *
     * @return          an ArrayList will all items between startAt and endAt.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
 	**/
     public static ArrayList<Pair> getSegment(ArrayList<Pair> list, int startAt, int endAt)
@@ -674,6 +707,24 @@ public class XMLGrep {
     	
     	return newList;
     }
+
+	/**
+ 	 * Find the first item that has an XPath that begins with a given XPath.
+ 	 * Search begins at a given index in the ArrayList.
+ 	 * Works with XML documents opened with a call to "open()".
+	 *
+    * @param xpath    The XPath pattern of the value to look for. 
+    * @param startAt  the index to start the search.
+    *
+    * @return          the index in the ArrayList of the first matching element
+    *                  or -1 if no matching element was found.
+    *
+	 * @since           1.0
+	**/
+    public int findFirstElement(String xpath, int startAt)
+    {
+    	return findFirstElement(mPairList, xpath, startAt);
+    }
     
 	/**
  	 * Find the first item that has an XPath that begins with a given XPath.
@@ -686,8 +737,6 @@ public class XMLGrep {
     * @return          the index in the ArrayList of the first matching element
     *                  or -1 if no matching element was found.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
 	**/
     public static int findFirstElement(ArrayList<Pair> list, String xpath, int startAt)
@@ -705,6 +754,24 @@ public class XMLGrep {
     	
     	return -1;
     }
+
+	/**
+ 	 * Find the last item that has an XPath that begins with a given XPath.
+ 	 * Search begins at a given index in the ArrayList.
+ 	 * Works with XML documents opened with a call to "open()".
+	 *
+    * @param xpath    The XPath pattern of the value to look for. 
+    * @param startAt  the index to start the search.
+    *
+    * @return          the index in the ArrayList of the first matching element
+    *                  or -1 if no matching element was found.
+    *
+	 * @since           1.0
+	**/
+    public int findLastElement(String xpath, int startAt)
+    {
+    	return findLastElement(mPairList, xpath, startAt);
+    }
     
 	/**
  	 * Find the last item that has an XPath that begins with a given XPath.
@@ -717,8 +784,6 @@ public class XMLGrep {
     * @return          the index in the ArrayList of the first matching element
     *                  or -1 if no matching element was found.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
 	**/
     public static int findLastElement(ArrayList<Pair> list, String xpath, int startAt)
@@ -744,8 +809,6 @@ public class XMLGrep {
 	 *
     * @param node     the starting Node in the document to print.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
 	**/
 	public static void writeXMLTagged(Node node) 
@@ -760,8 +823,6 @@ public class XMLGrep {
     * @param out     the @link{PrintStream} to send the output.
     * @param node     the starting Node in the document to print.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
 	**/
     public static void writeXMLTagged(PrintStream out, Node node)
@@ -783,8 +844,6 @@ public class XMLGrep {
     * @param startAt     the index of the first pair to print.
     * @param endAt     the index of the last pair to print.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
 	**/
     public static void writeXMLTagged(PrintStream out, ArrayList<Pair> list, int startAt, int endAt)
@@ -877,8 +936,6 @@ public class XMLGrep {
     * @param out     the @link{PrintStream} to send the output.
     * @param list     the list of pairs to print.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
 	**/
     public static void writeXMLTagged(PrintStream out, ArrayList<Pair> list) 
@@ -893,8 +950,6 @@ public class XMLGrep {
     * @param item     the XPath/Value pair to print.
     * @param indent	if true then tag is indented to match nesting level.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
 	**/
     public static void writeXMLTagged(PrintStream out, Pair<String, String> item, boolean indent) 
@@ -912,8 +967,6 @@ public class XMLGrep {
 	 *
     * @param node     the starting Node in the document to print.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
 	**/
 	public static void writeTagged(Node node) 
@@ -928,8 +981,6 @@ public class XMLGrep {
     * @param out     the @link{PrintStream} to send the output.
     * @param node     the starting Node in the document to print.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
 	**/
     public static void writeTagged(PrintStream out, Node node)
@@ -951,8 +1002,6 @@ public class XMLGrep {
     * @param startAt     the index of the first pair to print.
     * @param endAt     the index of the last pair to print.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
 	**/
     public static void writeTagged(PrintStream out, ArrayList<Pair> list, int startAt, int endAt)
@@ -978,8 +1027,6 @@ public class XMLGrep {
     * @param out     the @link{PrintStream} to send the output.
     * @param list     the list of pairs to print.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
 	**/
     public static void writeTagged(PrintStream out, ArrayList<Pair> list) 
@@ -995,8 +1042,6 @@ public class XMLGrep {
     * @param out     the @link{PrintStream} to send the output.
     * @param item     the XPath/Value pair to print.
     *
-	 * @author Todd King
-	 * @author UCLA/IGPP
 	 * @since           1.0
 	**/
     public static void writeTagged(PrintStream out, Pair item) 
