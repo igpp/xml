@@ -134,8 +134,9 @@ public class ToXHTML
         // set some properties to non-default values
         props.setTranslateSpecialEntities(true);
         props.setTransResCharsToNCR(true);
-        props.setOmitComments(true);
-
+        props.setOmitComments(false);
+        props.setUseCdataForScriptAndStyle(false);
+        
         // do parsing
         TagNode tagNode = new HtmlCleaner(props).clean(content);
         
