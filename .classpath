@@ -7,5 +7,8 @@
 	<classpathentry kind="lib" path="lib/javax.servlet.jsp.jar"/>
 	<classpathentry kind="lib" path="lib/dom4j-1.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/igpp-util-1.0.8.jar"/>
+	<classpathentry kind="lib" path="lib/core-renderer-R8pre2.jar"/>
+	<classpathentry kind="lib" path="lib/iText-2.0.8.jar"/>
+	<classpathentry kind="lib" path="lib/htmlcleaner-2.2.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

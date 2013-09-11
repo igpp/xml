@@ -54,6 +54,8 @@ public class ToPDF
         		return;
         	}
         	
+        	if(me.mVerbose) System.out.println("File: " + line.getArgs()[0]);
+        	
         	fileToPDF(line.getArgs()[0], outStream);
         } catch (Exception e) {
         	e.printStackTrace(System.out);
@@ -106,7 +108,7 @@ public class ToPDF
     {
     	// FlyingSaucer and iText part
         ITextRenderer renderer = new ITextRenderer();
-        renderer.setDocumentFromString(content);
+        renderer.setDocument(content);
         renderer.layout();
         renderer.createPDF(outStream);
 

@@ -46,7 +46,6 @@ public class XMLGrep {
 	private static boolean mVerbose = false;
 	private static boolean mXMLOutput = false;
 	
-	private ArrayList<String> mTagStack = new ArrayList<String>();
 	private ArrayList<Pair> mPairList = new ArrayList<Pair>();
 	
 	private static String mIndent = "   ";	// Amount to indent each level of nested XML tags
@@ -173,7 +172,7 @@ public class XMLGrep {
 		System.out.println("");
 		System.out.println("To list the XPath tagged list of all content in an XML file use the command:");
 		System.out.println("");
-   	System.out.println("   java " + getClass().getName() + " example.xml");
+		System.out.println("   java " + getClass().getName() + " example.xml");
 		System.out.println("");
 		System.out.println("will generate a list like:");
 		System.out.println("");
@@ -221,7 +220,6 @@ public class XMLGrep {
 	 throws Exception 
 	{
 		InputStream stream;
-		boolean        status;
 		Document		document;
 		
 		if(mVerbose) { System.out.println("Parsing: " + pathName); }

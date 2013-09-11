@@ -62,6 +62,8 @@ public class ToXHTML
         		return;
         	}
         	
+        	if(me.mVerbose) System.out.println("File: " + line.getArgs()[0]);
+        	
         	outStream.print(fileToXHTML(line.getArgs()[0], cssFile));
         } catch (Exception e) {
         	e.printStackTrace(System.out);

@@ -29,7 +29,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 
 /**
- * An base class for XML parsing.
+ * A base class for XML parsing.
  *
  * Supports parsing XML and loading the content into internal variables.
  * For each tag in the XML a corresponding set() method is called if it exists.
@@ -199,7 +199,7 @@ public class XMLParser {
     }
     
     /** 
-     * Parses a file containing XML into its constitute elments.
+     * Parses a file containing XML into its constitute elements.
      * The path and name of the file are passed to the method which is
      * opened and parsed.
      *
@@ -262,7 +262,7 @@ public class XMLParser {
 
         // Configure parser
         factory.setValidating(false);   
-        factory.setNamespaceAware(false);
+        factory.setNamespaceAware(true);
         factory.setIgnoringComments(false);
         factory.setCoalescing(true);
 
@@ -1610,5 +1610,5 @@ public class XMLParser {
 	public String getClassName() { return mClassName; }
     
 	public void addRequired(String value) { mRequired.add(value); }
-	public ArrayList getRequired() { return mRequired; }
+	public ArrayList<String> getRequired() { return mRequired; }
 }

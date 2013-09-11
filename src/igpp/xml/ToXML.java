@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.StringWriter;
+import java.io.StringReader;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -14,9 +15,9 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 
 import org.dom4j.Document;  
-import org.dom4j.DocumentHelper;  
 import org.dom4j.io.OutputFormat;  
 import org.dom4j.io.XMLWriter;
+import org.dom4j.io.SAXReader;
 
 public class ToXML 
 {
@@ -117,7 +118,11 @@ public class ToXML
     
     public static String stringToXML(String xml){
         try{
-        	Document doc = DocumentHelper.parseText(xml);  
+        	// Document doc = DocumentHelper.parseText(xml);
+        	SAXReader reader = new SAXReader();
+        	reader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
+        	StringReader stringReader = new StringReader(xml);
+        	Document doc = reader.read(stringReader);
         	StringWriter sw = new StringWriter();  
         	OutputFormat format = OutputFormat.createPrettyPrint(); 
     	    format.setTrimText(mCompact);

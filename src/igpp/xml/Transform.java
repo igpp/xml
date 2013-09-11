@@ -40,13 +40,12 @@ public class Transform
 	/** 
     * Command-line interface
 	 * 
-    * @param args    	the arguments passe don the command-line.
+    * @param args    	the arguments passed on the command-line.
     *
     * @since           1.0
     **/
 	static public void main(String[] args) 
 	{
-		String	message;
 		Transform me = new Transform();
 		
 		if(args.length < 2) {
@@ -57,9 +56,9 @@ public class Transform
 		
 		try {
 			if(args[0].startsWith("http:")) {
-				me.perform(getURLSource(args[0]), args[1], System.out);
+				Transform.perform(getURLSource(args[0]), args[1], System.out);
 			} else {
-				me.perform(args[0], args[1], System.out);
+				Transform.perform(args[0], args[1], System.out);
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -93,7 +92,7 @@ public class Transform
 	 *
 	 * @return the {@link Transformer} prepared to use the passed stylesheet.
     **/
-    static public synchronized Transformer getTransformer(String xslFile, HashMap cache) 
+    static public synchronized Transformer getTransformer(String xslFile, HashMap<String, Templates> cache) 
     	throws TransformerException 
     {
         System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
