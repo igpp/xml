@@ -1,0 +1,14 @@
+<!-- Example use of table data with Velocity -->
+<!-- Source table should have at least three columns with the names "id", "project", and "version" -->
+<Doc>
+   <records>${table.record.size()}</records>
+   <table>
+#foreach ($record in $table.record) 
+      <record>
+         <id>$record.id</id>
+         <project>$record.project</project>
+         <version>$record.version</version>
+      </record>
+#end
+   </table>
+</Doc>

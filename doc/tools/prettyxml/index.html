@@ -1,0 +1,79 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>${options.base}/prettyxml</title>
+    <meta name="author" content="Todd King" />
+    <meta http-equiv="Content-Language" content="en" />
+    <link rel="stylesheet" href="../style.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="../template.js"> </script>
+    <script type="text/javascript" src="sidebar.js"> </script>
+   </head>
+   <body>
+<div class="container">
+   <script>header();</script>
+   <script>sidebar();</script>
+   <div class="span9 content">
+   <h1>prettyxml</h1>
+<p>
+Converts XML to pretty XML.
+</p>
+<p>
+Usage: java igpp.xml.PrettyXML [options] file
+</p>
+<p>
+Options:<br/>
+usage: igpp.xml.PrettyXML
+<table class="indent">
+<tr><td>-c,--compact</td><td>Compact. Generate compact output. Extra whitespace is removed.</td></tr>
+<tr><td>-h,--help</td><td>           Dispay this text</td></tr>
+<tr><td>-i,--indent {arg}</td><td>   Indent. The string to use as the indent. Default: 3 spaces.</td></tr>
+<tr><td>-o,--output {arg}</td><td>   Output. Output generated document to {file}. Default: System.out.</td></tr>
+<tr><td>-v,--verbose</td><td>        Verbose. Show status at each step.</td></tr>
+</table>
+<p>
+Acknowledgements:<br/>
+Development funded by NASA's PDS project at UCLA.
+</p>
+
+<h2><a name="RegEx">Simple Example</a></h2>
+<p>A command like:</p>
+	  
+	  <div class="code">
+	  prettyxml flat.xml
+</div>
+<p>where '<a href="flat.xml">flat.xml</a>' contains:</p>
+	  <div class="code">
+<pre>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;doc&gt;
+&lt;name&gt;John&lt;/name&gt;
+&lt;sibling&gt;
+&lt;name&gt;Paul&lt;/name&gt;
+&lt;child&gt;
+&lt;name&gt;William&lt;/name&gt;
+&lt;/child&gt;
+&lt;/sibling&gt;
+&lt;/doc&gt;
+</pre>
+	  </div>
+<p>will generate XML that looks like:</p>
+	  <div class="code">
+<pre>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;doc&gt;
+   &lt;name&gt;John&lt;/name&gt;
+   &lt;sibling&gt;
+      &lt;name&gt;Paul&lt;/name&gt;
+      &lt;child&gt;
+         &lt;name&gt;William&lt;/name&gt;
+      &lt;/child&gt;
+   &lt;/sibling&gt;
+&lt;/doc&gt;
+</pre>
+	  </div>
+	  
+</div><!-- span -->
+<script>footer();</script>
+</div><!-- container -->
+</body>
+</html>

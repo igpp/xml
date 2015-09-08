@@ -1,0 +1,18 @@
+# Cassini magnetic-field 1 minute averages for the year 2012 in RTN
+# coordinates. RTN coordinates consist of R (radial component, Sun to
+# the spacecraft), T (tangential component, parallel to the Solar
+# Equatorial plane and perpendicular to R), and N (normal component,
+# completes right handed set).
+#
+# These MAG data were processed (calibrated, rotated into RTN
+# coordinates, and averaged) by the Cassini MAG team at Imperial
+# College. They were provided to PDS by the MAG team Co-I at UCLA.
+# Trajectory and the number of points in the average were added at the
+# PDS/PPI node. For more information on this and previous versions,
+# please refer to the PDS catalog file for this data set
+# (CO_MAG_CAL_1MIN_DS.CAT).
+Name	Number	Unit	Data_Type	Start_Byte	Bytes	Description
+TIME	1	N/A	TIME	1	19	Spacecraft event time of the sample.
+BR	2	nT	ASCII_REAL	21	10	The radial component (R) points from the Sun to the spacecraft,positive away from the Sun.
+BT	3	nT	ASCII_REAL	32	10	RTN tangetial (T) component of the magnetic field in nT. T is parallel to the Solar Equatorial plane (Omega[Sun] x R).
+BPHI	4	nt	ASCII_REAL	42	10	RTN normal (N) component of the magnetic field in nT. N completes the right handed set, and is roughly normal to the Solar Equatorial plane.

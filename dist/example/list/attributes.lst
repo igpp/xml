@@ -1,0 +1,5 @@
+# This is data for the narrative example
+title=Example Narrative
+project=igpp.docgen
+version=1
+colors={red, green, blue}

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+   <title>igpp.docgen/Example/CDF Generate</title>
+   <meta name="author" content="Todd King" />
+   <meta http-equiv="Content-Language" content="en" />
+   <link rel="stylesheet" href="../../style.css" type="text/css" media="screen" />
+   <script type="text/javascript" src="../../template.js"> </script>
+   <script type="text/javascript" src="sidebar.js"> </script>
+</head>
+<body>
+<div class="container">
+   <script>header();</script>
+   <script>sidebar();</script>
+   <div class="span9 content">
+   	<h3>Scenario</h3>
+   	<p>
+      Create a PDS4 label that describes the data in a CDF file.
+      </p>
+      <hr/>
+      <p>Our CDF file contains a time series of data.
+         It has a magnetic field vector in HDZ coordinates and time stamp for each vector.
+         The magnetic field vector is stored as a 2D array with the dimension of 3 by 1440.
+         The time stamp is a 1D array with 1440 elements (one for each HDZ vector).
+         We want to create an PDS4 label that describes the data in the CDF file.
+      </p>
+      <p>We will use the data file with the name <a href="thg_l2_mag_and_20121226_v01.cdf">thg_l2_mag_and_20121226_v01.cdf</a>.</p>
+      <p>Our velocity template will be a PDS4 label with some information already filled in.
+         Information specific to the contents of the CDF file (data arrays, record count, file size, etc.) will be generated
+         using igpp.docgen. Our template looks like:</p>
+<div class="code"><xmp><?xml version="1.0" encoding="UTF-8"?>
+<Product_Observational xmlns="http://pds.nasa.gov/pds4/pds/v1"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="PDS4_PDS_1000.xsd">
+    <Identification_Area>
+        <logical_identifier>urn:nasa:pds:themis:fgm:$cdf.getAttributeValue('Logical_file_id')::v0$cdf.getAttributeValue('Data_version')</logical_identifier>
+        <version_id>1.0</version_id>
+        <title>$cdf.getAttributeValue('Logical_source_description')</title>
+        <information_model_version>1.1.0.0</information_model_version>
+        <product_class>Product_Observational</product_class>
+    </Identification_Area>
+    <Observation_Area>
+        <Time_Coordinates>
+            <start_date_time>Unknown</start_date_time>
+            <stop_date_time>Unknown</stop_date_time>
+        </Time_Coordinates>
+        <Primary_Result_Summary>
+            <purpose>Science</purpose>
+            <data_regime>Magnetopshere</data_regime>
+            <processing_level_id>Calibrated</processing_level_id>
+        </Primary_Result_Summary>
+        <Investigation_Area>
+            <name>$cdf.getAttributeValue("Mission_group") $cdf.getAttributeValue("TITLE")</name>
+            <type>Observing Campaign</type>
+            <Internal_Reference>
+                <lid_reference>urn:nasa:pds:themis:fgm</lid_reference>
+                <reference_type>data_to_investigation</reference_type>
+            </Internal_Reference>
+        </Investigation_Area>
+        <Observing_System>
+            <Observing_System_Component>
+                <name>THEMIS-A</name>
+                <type>Spacecraft</type>
+            </Observing_System_Component>
+        </Observing_System>
+        <Target_Identification>
+            <name>Earth</name>
+            <type>WhoKnows</type>
+        </Target_Identification>
+    </Observation_Area>
+    <File_Area_Observational>
+        <File>
+            <file_name>$cdf.pathName</file_name>
+        </File>
+        <Header>
+           <name>CDF Header</name>
+           <offset unit="byte">0</offset>
+           <object_length unit="byte">404</object_length>
+           <parsing_standard_id>CDF 3.4 ISTP/IACG</parsing_standard_id>
+        </Header>
+#foreach ($variable in $cdf.variables)
+#set($var_type = $variable.getAttributeValue("VAR_TYPE"))
+#set($funct = $variable.getAttributeValue("FUNCT"))
+#if( ! $funct.isEmpty() || $var_type.compareTo("metadata") == 0) 
+## Don't output functions or metadata
+#else
+#if($variable.getDimCount() == 1)
+#if($variable.getDim(0) == 1)
+#set($arrayTag="Array_1D")
+#set($axis=1)
+#else
+#set($arrayTag="Array_2D")
+#set($axis=2)
+#{end}## dim()
+#{end}## dimCount()
+         <$arrayTag>
+            <name>$variable.getAttributeValue('FIELDNAM')</name>
+            <local_indentifier>$variable.name</local_identifier>
+            <offset unit="byte">$variable.startByte</offset>
+            <axes>$axis</axes>
+            <axis_index_order>#foreach($a in [1..$axis])$a #end</axis_index_order>
+            <description>$variable.getAttributeValue("CATDESC")
+            $variable.getAttributeValue("VAR_NOTES") </description>
+            <Element_Array>
+                <data_type>$cdf.getDataTypePDS($variable.dataType)</data_type>
+            </Element_Array>
+#foreach($a in [1..$axis])
+#set($i = $a - 2) ## CDF indexing of dims does not include rows dimension and indexing starts at 0.            
+            <Axis_Array>
+#if($a == 1)
+                <axis_name>Record</axis_name>
+                <elements>$variable.recordCount</elements>
+#else
+                <axis_name>$variable.name</axis_name>
+                <elements>$variable.getDim($i)</elements>
+#{end}## if $a == 1
+                <sequence_number>$a</sequence_number>
+            </Axis_Array>
+#{end}## foreach($a)
+         </$arrayTag>
+#{end}## If data or func
+#{end}## foreach variable
+    </File_Area_Observational>
+</Product_Observational>
+</xmp>
+</div>
+      <p>We will store this in a file called <a href="pds4label.vm">pds4label.vm</a>.</p>
+      <p>A CDF file contains attributes and variables. An attribute can contain descriptive information
+      	which is transferred into the appropriate PDS4 element. A varaible can contain data or sets of metadata
+      	In the template conditional statements (if/else) make sure that we only write the variables 
+      	in the CDF file which are designated as "data". 
+      </p>
+      <p>Running igpp.docgen with the command:</p>
+<div class="code">
+java -jar igpp-docgen.jar cdf:thg_l2_mag_and_20121226_v01.cdf testcase/cdf/pds4label.vm
+</div>
+      <p>Instructs igpp.docgen to parse the file "thg_l2_mag_and_20121226_v01.cdf" and place the results in a context
+         named "cdf". Since the extension on "thg_l2_mag_and_20121226_v01.cdf" is ".cdf" igpp.docgen will parse the
+         file a CDF file, creating arrays to contian the attribute and variable information in the file.
+      <p>Running this command will generate an XML document that looks like:</p>
+<div class="code"><xmp><?xml version="1.0" encoding="UTF-8"?>
+<Product_Observational xmlns="http://pds.nasa.gov/pds4/pds/v1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://pds.nasa.gov/pds4/pds/v1 file:PDS4_PDS_1000.xsd">
+    <Identification_Area>
+        <logical_identifier>urn:nasa:pds:themis:fgm:thg_l2_mag_and_20121226_v01::v01</logical_identifier>
+        <version_id>1.0</version_id>
+        <title>Ground-based Vector Magnetic Field at Andenes, Norway, 1 minute time Resolution.</title>
+        <information_model_version>1.1.0.0</information_model_version>
+        <product_class>Product_Observational</product_class>
+    </Identification_Area>
+    <Observation_Area>
+        <Time_Coordinates>
+            <start_date_time>Unknown</start_date_time>
+            <stop_date_time>Unknown</stop_date_time>
+        </Time_Coordinates>
+        <Primary_Result_Summary>
+            <purpose>Science</purpose>
+            <data_regime>Magnetopshere</data_regime>
+            <processing_level_id>Calibrated</processing_level_id>
+        </Primary_Result_Summary>
+        <Investigation_Area>
+            <name>THEMIS</name>
+            <type>Observing Campaign</type>
+            <Internal_Reference>
+                <lid_reference>urn:nasa:pds:themis:fgm</lid_reference>
+                <reference_type>data_to_investigation</reference_type>
+            </Internal_Reference>
+        </Investigation_Area>
+        <Observing_System>
+            <Observing_System_Component>
+                <name>THEMIS-A</name>
+                <type>Spacecraft</type>
+            </Observing_System_Component>
+        </Observing_System>
+        <Target_Identification>
+            <name>Earth</name>
+            <type>WhoKnows</type>
+        </Target_Identification>
+    </Observation_Area>
+    <File_Area_Observational>
+        <File>
+            <file_name>thg_l2_mag_and_20121226_v01.cdf</file_name>
+        </File>
+        <Header>
+            <name>CDF Header</name>
+            <offset unit="byte">0</offset>
+            <object_length unit="byte">404</object_length>
+            <parsing_standard_id>CDF 3.4 ISTP/IACG</parsing_standard_id>
+        </Header>
+        <Array_2D>
+            <name>B in HDZ Components</name>
+            <local_identifier>thg_mag_and</local_identifier>
+            <offset unit="byte">20031</offset>
+            <axes>2</axes>
+            <axis_index_order>1 2</axis_index_order>
+            <description>Magnetic field B in HDZ vector components
+            Rotated from geographic XYZ components using declination provided by TGU.</description>
+            <Element_Array>
+                <data_type>IEEE754MSBSingle</data_type>
+            </Element_Array>
+            <Axis_Array>
+                <axis_name>Record</axis_name>
+                <elements>1440</elements>
+                <sequence_number>1</sequence_number>
+            </Axis_Array>
+            <Axis_Array>
+                <axis_name>thg_mag_and</axis_name>
+                <elements>3</elements>
+                <sequence_number>2</sequence_number>
+            </Axis_Array>
+        </Array_2D>
+        <Array_2D>
+            <name>HDZ Component Number</name>
+            <local_identifier>thg_mag_and_compno</local_identifier>
+            <offset unit="byte">40541</offset>
+            <axes>2</axes>
+            <axis_index_order>1 2</axis_index_order>
+            <description>HDZ Component Number</description>
+            <Element_Array>
+                <data_type>SignedMSB4</data_type>
+            </Element_Array>
+            <Axis_Array>
+                <axis_name>Record</axis_name>
+                <elements>1</elements>
+                <sequence_number>1</sequence_number>
+            </Axis_Array>
+            <Axis_Array>
+                <axis_name>thg_mag_and_compno</axis_name>
+                <elements>3</elements>
+                <sequence_number>2</sequence_number>
+            </Axis_Array>
+        </Array_2D>
+        <Array_1D>
+            <name>thg_mag_and_time</name>
+            <local_identifier>thg_mag_and_time</local_identifier>
+            <offset unit="byte">42468</offset>
+            <axes>1</axes>
+            <axis_index_order>1</axis_index_order>
+            <description>thg_mag_and_time,.UTC, in seconds since 01-Jan-1970 00:00:00
+            Unleaped seconds</description>
+            <Element_Array>
+                <data_type>IEEE754MSBDouble</data_type>
+            </Element_Array>
+            <Axis_Array>
+                <axis_name>Record</axis_name>
+                <elements>1440</elements>
+                <sequence_number>1</sequence_number>
+            </Axis_Array>
+        </Array_1D>
+        <Array_1D>
+            <name>thg_mag_and_epoch0</name>
+            <local_identifier>thg_mag_and_epoch0</local_identifier>
+            <offset unit="byte">57492</offset>
+            <axes>1</axes>
+            <axis_index_order>1</axis_index_order>
+            <description>EPOCH0 of THEMIS TIME BASE
+            EPOCH of 01-Jan-1970 00:00:00</description>
+            <Element_Array>
+                <data_type>IEEE754MSBDouble</data_type>
+            </Element_Array>
+            <Axis_Array>
+                <axis_name>Record</axis_name>
+                <elements>1</elements>
+                <sequence_number>1</sequence_number>
+            </Axis_Array>
+        </Array_1D>
+        <Array_1D>
+            <name>range_epoch</name>
+            <local_identifier>range_epoch</local_identifier>
+            <offset unit="byte">58508</offset>
+            <axes>1</axes>
+            <axis_index_order>1</axis_index_order>
+            <description>range_epoch</description>
+            <Element_Array>
+                <data_type>IEEE754MSBDouble</data_type>
+            </Element_Array>
+            <Axis_Array>
+                <axis_name>Record</axis_name>
+                <elements>2</elements>
+                <sequence_number>1</sequence_number>
+            </Axis_Array>
+        </Array_1D>
+    </File_Area_Observational>
+</Product_Observational>
+</xmp>
+</div>
+</div> <!-- content -->
+<script>footer();</script>
+</div><!-- container -->
+</body>
+</html>

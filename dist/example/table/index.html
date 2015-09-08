@@ -1,0 +1,48 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+   <title>igpp.docgen/Example/Table</title>
+   <meta name="author" content="Todd King" />
+   <meta http-equiv="Content-Language" content="en" />
+   <link rel="stylesheet" href="../../style.css" type="text/css" media="screen" />
+   <script type="text/javascript" src="../../template.js"> </script>
+   <script type="text/javascript" src="sidebar.js"> </script>
+</head>
+<body>
+<div class="container">
+   <script>header();</script>
+   <script>sidebar();</script>
+   <div class="span9 content">
+   	<p>
+      These examples illustrate how to use the igpp.docgen tool with table data.
+      </p>
+      <p>Table data is arranged as records composed of fields. Each field contains a value.
+         A table can contain any number of records and the number and order of fields in
+         each record is the same. Each field can have a name so that it can referenced.
+      </p>
+      <p>igpp.docgen supports delimited tables where each field is delineated by a field
+         delimiter. The default delimiter is a comma (,). Other delimiters can be used. 
+         When they are it must be specified on command-line with the "-s" option.
+      </p>
+      <p>When igpp.docgen parses a table it looks for the first non-commented line and uses
+         that to determine the names for each field and how many fields should be in record.
+      </p>
+      <p>igpp.docgen also supports comments in a table file. Any line beginning with "#" is
+         considered a comment. The content of all comments are assigned to the "description"
+         attribute of the generated velocity context.
+      </p>
+      <h3>Example Uses</h3>
+      <dt><a href="known.html">With Known Structure</a></dt>
+      <dd>Using tables with known structures, create a simple XML document showing using 
+         the contents of table with a known structure.
+      </dd>
+      
+      <dt><a href="adaptive.html">Adaptive to Structure</a></dt>
+      <dd>Using tables with any structure, create a VOTable to match the CSV table.
+      </dd>
+   </div> <!-- content -->
+<script>footer();</script>
+
+</div><!-- container -->
+</body>
+</html>

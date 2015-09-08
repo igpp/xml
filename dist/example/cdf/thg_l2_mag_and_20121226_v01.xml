@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Product_Observational xmlns="http://pds.nasa.gov/pds4/pds/v1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pds.nasa.gov/pds4/pds/v1 file:/C:/My%20Documents/PDS/PDS4/Release%201.0/PDS4_PDS_1000.xsd">
+    <Identification_Area>
+        <logical_identifier>urn:nasa:pds:themis:fgm:thg_l2_mag_and_20121226_v01::v01</logical_identifier>
+        <version_id>1.0</version_id>
+        <title>Ground-based Vector Magnetic Field at Andenes, Norway, 1 minute time Resolution.</title>
+        <information_model_version>1.1.0.0</information_model_version>
+        <product_class>Product_Observational</product_class>
+    </Identification_Area>
+    <Observation_Area>
+        <Time_Coordinates>
+            <start_date_time>Unknown</start_date_time>
+            <stop_date_time>Unknown</stop_date_time>
+        </Time_Coordinates>
+        <Primary_Result_Summary>
+            <purpose>Science</purpose>
+            <data_regime>Magnetopshere</data_regime>
+            <processing_level_id>Calibrated</processing_level_id>
+        </Primary_Result_Summary>
+        <Investigation_Area>
+            <name>THEMIS</name>
+            <type>Observing Campaign</type>
+            <Internal_Reference>
+                <lid_reference>urn:nasa:pds:themis:fgm</lid_reference>
+                <reference_type>data_to_investigation</reference_type>
+            </Internal_Reference>
+        </Investigation_Area>
+        <Observing_System>
+            <Observing_System_Component>
+                <name>THEMIS-A</name>
+                <type>Spacecraft</type>
+            </Observing_System_Component>
+        </Observing_System>
+        <Target_Identification>
+            <name>Earth</name>
+            <type>WhoKnows</type>
+        </Target_Identification>
+    </Observation_Area>
+    <File_Area_Observational>
+        <File>
+            <file_name>thg_l2_mag_and_20121226_v01.cdf</file_name>
+        </File>
+        <Header>
+            <name>CDF Header</name>
+            <offset unit="byte">0</offset>
+            <object_length unit="byte">404</object_length>
+            <parsing_standard_id>CDF 3.4 ISTP/IACG</parsing_standard_id>
+        </Header>
+        <Array_2D>
+            <name>B in HDZ Components</name>
+            <local_identifier>thg_mag_and</local_identifier>
+            <offset unit="byte">20031</offset>
+            <axes>2</axes>
+            <axis_index_order>1 2</axis_index_order>
+            <description>Magnetic field B in HDZ vector components
+            Rotated from geographic XYZ components using declination provided by TGU.</description>
+            <Element_Array>
+                <data_type>IEEE754MSBSingle</data_type>
+            </Element_Array>
+            <Axis_Array>
+                <axis_name>Record</axis_name>
+                <elements>1440</elements>
+                <sequence_number>1</sequence_number>
+            </Axis_Array>
+            <Axis_Array>
+                <axis_name>thg_mag_and</axis_name>
+                <elements>3</elements>
+                <sequence_number>2</sequence_number>
+            </Axis_Array>
+        </Array_2D>
+        <Array_2D>
+            <name>HDZ Component Number</name>
+            <local_identifier>thg_mag_and_compno</local_identifier>
+            <offset unit="byte">40541</offset>
+            <axes>2</axes>
+            <axis_index_order>1 2</axis_index_order>
+            <description>HDZ Component Number</description>
+            <Element_Array>
+                <data_type>SignedMSB4</data_type>
+            </Element_Array>
+            <Axis_Array>
+                <axis_name>Record</axis_name>
+                <elements>1</elements>
+                <sequence_number>1</sequence_number>
+            </Axis_Array>
+            <Axis_Array>
+                <axis_name>thg_mag_and_compno</axis_name>
+                <elements>3</elements>
+                <sequence_number>2</sequence_number>
+            </Axis_Array>
+        </Array_2D>
+        <Array_1D>
+            <name>thg_mag_and_time</name>
+            <local_identifier>thg_mag_and_time</local_identifier>
+            <offset unit="byte">42468</offset>
+            <axes>1</axes>
+            <axis_index_order>1</axis_index_order>
+            <description>thg_mag_and_time,.UTC, in seconds since 01-Jan-1970 00:00:00
+            Unleaped seconds</description>
+            <Element_Array>
+                <data_type>IEEE754MSBDouble</data_type>
+            </Element_Array>
+            <Axis_Array>
+                <axis_name>Record</axis_name>
+                <elements>1440</elements>
+                <sequence_number>1</sequence_number>
+            </Axis_Array>
+        </Array_1D>
+        <Array_1D>
+            <name>thg_mag_and_epoch0</name>
+            <local_identifier>thg_mag_and_epoch0</local_identifier>
+            <offset unit="byte">57492</offset>
+            <axes>1</axes>
+            <axis_index_order>1</axis_index_order>
+            <description>EPOCH0 of THEMIS TIME BASE
+            EPOCH of 01-Jan-1970 00:00:00</description>
+            <Element_Array>
+                <data_type>IEEE754MSBDouble</data_type>
+            </Element_Array>
+            <Axis_Array>
+                <axis_name>Record</axis_name>
+                <elements>1</elements>
+                <sequence_number>1</sequence_number>
+            </Axis_Array>
+        </Array_1D>
+        <Array_1D>
+            <name>range_epoch</name>
+            <local_identifier>range_epoch</local_identifier>
+            <offset unit="byte">58508</offset>
+            <axes>1</axes>
+            <axis_index_order>1</axis_index_order>
+            <description>range_epoch</description>
+            <Element_Array>
+                <data_type>IEEE754MSBDouble</data_type>
+            </Element_Array>
+            <Axis_Array>
+                <axis_name>Record</axis_name>
+                <elements>2</elements>
+                <sequence_number>1</sequence_number>
+            </Axis_Array>
+        </Array_1D>
+    </File_Area_Observational>
+</Product_Observational>

@@ -1,0 +1,39 @@
+<Doc>
+   <name>$name</name>
+   <project>$project</project>
+   <description>Hello from $name in the $project project.
+   This is text just the way I want it to appear.
+   
+   Blank line above. Indent below
+       indented.
+   </description>
+   <test-name>$tester.Name</test-name>
+   <test-project>$tester.Project</test-project>
+#foreach( $test in $test4 )
+    <tr><td>$foreach.count</td><td>$test.name</td><td>$test.project</td></tr>
+#end
+
+   <test2d-name>$test2d.Name</test2d-name>
+   <test2d-project>$test2d.Project</test2d-project>
+#foreach( $test in $test2d.attributes )
+    <tr><td>$foreach.count</td><td>$test.name</td><td>$test.project</td></tr>
+#end
+
+Map information:
+FirstName: $map.firstName
+LastName: $map.lastName
+State: $map.submap.state
+
+Label:
+$label.INSTRUMENT_HOST_NAME
+Tables:
+#foreach( $table in $label.TABLE )
+    ($foreach.count) $table.OBJECT_NAME
+    #foreach( $column in $table.COLUMN) 
+       ($foreach.count) $column.NAME
+    #end
+#end
+
+    <$test2d.name:name>$name</$test2d.name:name>
+
+</Doc>

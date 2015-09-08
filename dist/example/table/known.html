@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+   <title>igpp.docgen/Example/Known Table</title>
+   <meta name="author" content="Todd King" />
+   <meta http-equiv="Content-Language" content="en" />
+   <link rel="stylesheet" href="../../style.css" type="text/css" media="screen" />
+   <script type="text/javascript" src="../../template.js"> </script>
+   <script type="text/javascript" src="sidebar.js"> </script>
+</head>
+<body>
+<div class="container">
+   <script>header();</script>
+   <script>sidebar();</script>
+   <div class="span9 content">
+   	<h3>Scenario</h3>
+   	<p>
+      Using tables with known structures, create a simple XML document
+      using the contents of table with a known structure.
+      </p>
+      <hr/>
+      <p>Our data is a table that contains information about projects.
+         It has three fields: id, project name and a version.
+         We want to create an XML document which conforms to a particular
+         schema.
+      </p>
+      <p>Our data table is in CSV format and looks like:</p>
+      <div class="code">
+<pre>
+# Example table data.
+id,project,version
+apple,Appleseed,version-1
+orange,OrangeBlossom,version-2
+</pre>
+      </div>
+      <p>We will store this in a file called <a href="projects.csv">projects.csv</a>.</p>
+      <p>Our velocity template looks like:</p>
+<div class="code">
+<pre>
+&lt;!-- Example use of table data with Velocity -->
+&lt;!-- Source table should have at least three columns with the names "id", "project", and "version" -->
+&lt;Doc>
+   &lt;records>${table.record.size()}&lt;/records>
+   &lt;table>
+   #foreach ($record in $table.record) 
+      &lt;record>
+         &lt;name>$record.id&lt;/name>
+         &lt;project>$record.project&lt;/project>
+         &lt;version>$record.version&lt;/version>
+      &lt;/record>
+   #end
+   &lt;/table>
+&lt;/Doc>
+</pre>
+</div>
+      <p>We will store this in a file called <a href="example-known.vm">example-known.vm</a>.</p>
+      <p>In the template we expect our table to be in a context called "table" (which is established
+         on the command line - see below). We will output a count of the number of records in the table
+         (${table.record.size()}) and for each record we will output the value for each field marked up
+         with XML tags.</p>
+      <p>Running igpp.docgen with the command:</p>
+      <div class="code">
+         $ java -jar igpp.docgen table:projects.csv example-known.vm
+      </div>
+      <p>Instructs igpp.docgen to parse the file "projects.csv" and place the results in a context
+         named "table". Since the extension on "projects.csv" is ".csv" igpp.docgen will parse the
+         file as a set of comma separated values, creating a record for each non-commented line in 
+         the file.</p>
+      <p>Running this command will generate an XML document that looks like:</p>
+<div class="code">
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?>
+&lt;Doc>
+   &lt;records>2&lt;/records>
+   &lt;table>
+      &lt;record>
+         &lt;id>apple&lt;/id>
+         &lt;project>Appleseed&lt;/project>
+         &lt;version>version-1&lt;/version>
+      &lt;/record>
+      &lt;record>
+         &lt;id>orange&lt;/id>
+         &lt;project>OrangeBlossom&lt;/project>
+         &lt;version>version-2&lt;/version>
+      &lt;/record>
+   &lt;/table>
+&lt;/Doc>
+</pre>
+</div>
+</div><!-- span -->
+<script>footer();</script>
+</div><!-- container -->
+</body>
+</html>

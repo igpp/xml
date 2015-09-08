@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+   <title>igpp.docgen/Example/PDS3 Transform</title>
+   <meta name="author" content="Todd King" />
+   <meta http-equiv="Content-Language" content="en" />
+   <link rel="stylesheet" href="../../style.css" type="text/css" media="screen" />
+   <script type="text/javascript" src="../../template.js"> </script>
+   <script type="text/javascript" src="sidebar.js"> </script>
+</head>
+<body>
+<div class="container">
+   <script>header();</script>
+   <script>sidebar();</script>
+   <div class="span9 content">
+   	<h3>Scenario</h3>
+   	<p>
+      Create an HTML table listing the columns in a PDS3 label that describes a table.
+      </p>
+      <hr/>
+      <p>Our PDS3 describes a data table. It has four column: time stamp, Br, Bt and Bphi.
+         We want to create an HTML table to list the columns.
+
+      </p>
+      <p>Out label is the same one created with the <a href="generate.html">generated example</a>.
+         Our PDS3 label looks like:</p>
+      <div class="code">
+<pre>
+PDS_VERSION_ID               = PDS3
+DATA_SET_ID                  = "CO-E/SW/J/S-MAG-4-SUMM-1MINAVG-V1.0"
+STANDARD_DATA_PRODUCT_ID     = "FGM L1B RTN 1MIN"
+PRODUCT_ID                   = "timeseries"
+PRODUCT_TYPE                 = "DATA"
+PRODUCT_VERSION_ID           = "1"
+PRODUCT_CREATION_TIME        = 2013-03-03T19:56:41
+
+START_TIME                   = 2012-01-01T00:00:30
+STOP_TIME                    = 2012-01-01T00:22:30
+
+INSTRUMENT_HOST_NAME         = "CASSINI ORBITER"
+INSTRUMENT_HOST_ID           = "CO"
+MISSION_PHASE_NAME           = "EXTENDED-EXTENDED MISSION"
+TARGET_NAME                  = "SATURN"
+INSTRUMENT_NAME              = "DUAL TECHNIQUE MAGNETOMETER"
+INSTRUMENT_ID                = "MAG"
+DESCRIPTION                  = " Cassini magnetic-field 1 minute averages for th
+e year 2012 in RTN coordinates. RTN coordinates consist of R (radial component,
+Sun to the spacecraft), T (tangential component, parallel to the Solar Equatoria
+l plane and perpendicular to R), and N (normal component, completes right handed
+ set). These MAG data were processed (calibrated, rotated into RTN coordinates,
+and averaged) by the Cassini MAG team at Imperial College. They were provided to
+ PDS by the MAG team Co-I at UCLA. Trajectory and the number of points in the av
+erage were added at the PDS/PPI node. For more information on this and previous
+versions, please refer to the PDS catalog file for this data set (CO_MAG_CAL_1MI
+N_DS.CAT)."
+
+SPICE_FILE_NAME              = "CAS_2012.MK"
+
+^TABLE                       = "timeseries.tab"
+MD5_CHECKSUM                 = "708bf8cfd80f2a544543661bcaf2bb61"
+RECORD_TYPE                  = FIXED_LENGTH
+RECORD_BYTES                 = 54
+FILE_RECORDS                 = 23
+OBJECT                       = TABLE
+  INTERCHANGE_FORMAT         = "ASCII"
+  ROWS                       = 23
+  COLUMNS                    = 7
+  ROW_BYTES                  = 54
+  DESCRIPTION                = ""
+
+  OBJECT                     = COLUMN
+    NAME                     = "TIME"
+    COLUMN_NUMBER            = 1
+    UNIT                     = "N/A"
+    DATA_TYPE                = TIME
+    START_BYTE               = 1
+    BYTES                    = 19
+    DESCRIPTION              = "Spacecraft event time of the sample."
+  END_OBJECT                 = COLUMN
+
+  OBJECT                     = COLUMN
+    NAME                     = "BR"
+    COLUMN_NUMBER            = 2
+    UNIT                     = "nT"
+    DATA_TYPE                = ASCII_REAL
+    START_BYTE               = 21
+    BYTES                    = 10
+    DESCRIPTION              = "The radial component (R) points from the Sun to
+the spacecraft,positive away from the Sun."
+  END_OBJECT                 = COLUMN
+
+  OBJECT                     = COLUMN
+    NAME                     = "BT"
+    COLUMN_NUMBER            = 3
+    UNIT                     = "nT"
+    DATA_TYPE                = ASCII_REAL
+    START_BYTE               = 32
+    BYTES                    = 10
+    DESCRIPTION              = "RTN tangetial (T) component of the magnetic fiel
+d in nT. T is parallel to the Solar Equatorial plane (Omega[Sun] x R)."
+  END_OBJECT                 = COLUMN
+
+  OBJECT                     = COLUMN
+    NAME                     = "BPHI"
+    COLUMN_NUMBER            = 4
+    UNIT                     = "nt"
+    DATA_TYPE                = ASCII_REAL
+    START_BYTE               = 42
+    BYTES                    = 10
+    DESCRIPTION              = "RTN normal (N) component of the magnetic field i
+n nT. N completes the right handed set, and is roughly normal to the Solar Equat
+orial plane."
+  END_OBJECT                 = COLUMN
+
+END_OBJECT                   = TABLE
+END
+</pre>
+      </div>
+      <p>We will store this in a file called <a href="timeseries.lbl">timeseries.lbl</a>.</p>
+      <p>Our velocity template looks like:</p>
+<div class="code">
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?>
+&lt;p>
+$label.DESCRIPTION
+&lt;/p>
+#foreach ($table in $label.TABLE)
+&lt;table>
+   &lt;thead>
+   &lt;tr>
+      &lt;th>Name&lt;/th>&lt;th>DataType&lt;/th>&lt;th>Bytes&lt;/th>&lt;th>StartByte&lt;/th>
+   &lt;/tr>
+   &lt;/thead>
+   &lt;tbody>
+#foreach( $column in $table.COLUMN) 
+   &lt;tr>
+      &lt;td>$column.NAME&lt;/td>
+      &lt;td>$column.DATA_TYPE&lt;/td>
+      &lt;td>$column.START_BYTE&lt;/td>
+      &lt;td>$column.BYTES&lt;/td>
+   &lt;/tr>
+#end
+   &lt;/tbody>
+&lt;/table>
+#end
+</pre>
+</div>
+      <p>We will store this in a file called <a href="example-html.vm">example-html.vm</a>.</p>
+      <p>In the template we expect our label to be in a context called "label" (which is established
+         on the command line - see below). When a PDS3 label is parsed the name sof varaibles matches
+         the keyword and the nesting of variables in the context mirrors the nesting of objects in
+         the label. Each object is defines according to its class (last word of the value assign to 
+         the OBJECT keyword). All objects are placed in arrays even when this is only one object.
+         This means that iterating over an object you always need to use a "#foreach". This is 
+         convienent since you can have highly adaptive Velocity templates.
+         
+         For our template the DESCRIPTION in the label is placed before the table. Then for each
+         COLUMN the value of NAME, DATA_TYPE, START_BYTES, and BYTES is wrapped in HTML table field
+         tags.
+         with XML tags.</p>
+      <p>Running igpp.docgen with the command:</p>
+<div class="code">
+java -jar igpp-docgen.jar label:timeseries.lbl -f html example-html.vm
+</div>
+      <p>Instructs igpp.docgen to parse the file "timeseries.lbl" and place the results in a context
+         named "label". Since the extension on "timeseries.lbl" is ".lbl" igpp.docgen will parse the
+         file as a PDS3 label. The output will be formatted as HTML (-f html)</p>
+      <p>Running this command will generate an XML document that looks like:</p>
+<div class="code">
+<pre>
+&lt;?xml version="1.0" encoding="utf-8"?>
+&lt;html>
+        &lt;head />
+        &lt;body>
+                &lt;p>
+                        Cassini magnetic-field 1 minute averages for th
+                        e year 2012 in RTN coordinates. RTN coordinates consist
+of R (radial component,
+                        Sun to the spacecraft), T (tangential component, paralle
+l to the Solar Equatoria
+                        l plane and perpendicular to R), and N (normal component
+, completes right handed
+                        set). These MAG data were processed (calibrated, rotated
+ into RTN coordinates,
+                        and averaged) by the Cassini MAG team at Imperial Colleg
+e. They were provided to
+                        PDS by the MAG team Co-I at UCLA. Trajectory and the num
+ber of points in the av
+                        erage were added at the PDS/PPI node. For more informati
+on on this and previous
+                        versions, please refer to the PDS catalog file for this
+data set (CO_MAG_CAL_1MI
+                        N_DS.CAT).
+                &lt;/p>
+                &lt;table border="1">
+                        &lt;thead>
+                                &lt;tr>
+                                        &lt;th>Name&lt;/th>
+                                        &lt;th>DataType&lt;/th>
+                                        &lt;th>Bytes&lt;/th>
+                                        &lt;th>StartByte&lt;/th>
+                                &lt;/tr>
+                        &lt;/thead>
+                        &lt;tbody>
+                                &lt;tr>
+                                        &lt;td>TIME&lt;/td>
+                                        &lt;td>TIME&lt;/td>
+                                        &lt;td>19&lt;/td>
+                                        &lt;td>1&lt;/td>
+                                &lt;/tr>
+                                &lt;tr>
+                                        &lt;td>BR&lt;/td>
+                                        &lt;td>ASCII_REAL&lt;/td>
+                                        &lt;td>10&lt;/td>
+                                        &lt;td>21&lt;/td>
+                                &lt;/tr>
+                                &lt;tr>
+                                        &lt;td>BT&lt;/td>
+                                        &lt;td>ASCII_REAL&lt;/td>
+                                        &lt;td>10&lt;/td>
+                                        &lt;td>32&lt;/td>
+                                &lt;/tr>
+                                &lt;tr>
+                                        &lt;td>BPHI&lt;/td>
+                                        &lt;td>ASCII_REAL&lt;/td>
+                                        &lt;td>10&lt;/td>
+                                        &lt;td>42&lt;/td>
+                                &lt;/tr>
+                        &lt;/tbody>
+                &lt;/table>
+        &lt;/body>
+&lt;/html>
+</pre>
+</div><!-- code -->
+<p>Which will look like this is a browser:
+<p>
+      Cassini magnetic-field 1 minute averages for th
+      e year 2012 in RTN coordinates. RTN coordinates consist
+of R (radial component,
+      Sun to the spacecraft), T (tangential component, paralle
+l to the Solar Equatoria
+      l plane and perpendicular to R), and N (normal component
+, completes right handed
+      set). These MAG data were processed (calibrated, rotated
+into RTN coordinates,
+      and averaged) by the Cassini MAG team at Imperial Colleg
+e. They were provided to
+      PDS by the MAG team Co-I at UCLA. Trajectory and the num
+ber of points in the av
+      erage were added at the PDS/PPI node. For more informati
+on on this and previous
+      versions, please refer to the PDS catalog file for this
+data set (CO_MAG_CAL_1MI
+      N_DS.CAT).
+</p>
+<table border="1">
+      <thead>
+              <tr>
+                      <th>Name</th>
+                      <th>DataType</th>
+                      <th>Bytes</th>
+                      <th>StartByte</th>
+              </tr>
+      </thead>
+      <tbody>
+              <tr>
+                      <td>TIME</td>
+                      <td>TIME</td>
+                      <td>19</td>
+                      <td>1</td>
+              </tr>
+              <tr>
+                      <td>BR</td>
+                      <td>ASCII_REAL</td>
+                      <td>10</td>
+                      <td>21</td>
+              </tr>
+              <tr>
+                      <td>BT</td>
+                      <td>ASCII_REAL</td>
+                      <td>10</td>
+                      <td>32</td>
+              </tr>
+              <tr>
+                      <td>BPHI</td>
+                      <td>ASCII_REAL</td>
+                      <td>10</td>
+                      <td>42</td>
+              </tr>
+      </tbody>
+</table>
+</div><!-- span -->
+<script>footer();</script>
+</div><!-- container -->
+</body>
+</html>

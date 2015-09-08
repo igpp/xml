@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+   <title>igpp.docgen/Example/List Narrative</title>
+   <meta name="author" content="Todd King" />
+   <meta http-equiv="Content-Language" content="en" />
+   <link rel="stylesheet" href="../../style.css" type="text/css" media="screen" />
+   <script type="text/javascript" src="../../template.js"> </script>
+   <script type="text/javascript" src="sidebar.js"> </script>
+</head>
+<body>
+<div class="container">
+   <script>header();</script>
+   <script>sidebar();</script>
+   <div class="span9 content">
+   	<h3>Scenario</h3>
+   	<p>
+      Create a narrative which describes a project.
+      </p>
+      <hr/>
+      <p>Our data is a a list of values that contain information about a project.
+         We want to create a narrative (free text) description of the project.
+      </p>
+      <p>Our data table is in list (keyword=value) format and looks like:</p>
+      <div class="code">
+<pre>
+# Example table data.
+id,project,version
+apple,Appleseed,version-1
+orange,OrangeBlossom,version-2
+</pre>
+      </div>
+      <p>We will store this in a file called <a href="attributes.lst">attributes.lst</a>.</p>
+      <p>Our velocity template looks like:</p>
+<div class="code">
+<pre>
+Hello from the $list.project project.
+I'm currently at version $list.version. I come in $list.colors.size()
+colors. They are:
+#foreach ($item in $list.colors)
+   $item
+#end
+</pre>
+</div>
+      <p>We will store this in a file called <a href="example-narrative.vm">example-narrative.vm</a>.</p>
+      <p>The template is like a form letter with placeholders in the text where we want the values
+         of the parameters to be placed. Our list of parameters will be in a context called "list" 
+         (which is established on the command line - see below).</p>
+      <p>Running igpp.docgen with the command:</p>
+      <div class="code">
+         $ java -jar igpp.docgen list:attributes.lst example-narrative.vm -f plain
+      </div>
+      <p>Instructs igpp.docgen to parse the file "narrative.lst" and place the results in a context
+         named "list". Since the extension on "narrative.lst" is ".lst" igpp.docgen will parse the
+         file as a set of keyword=value parameter assignments, creating a parameter for each 
+         non-commented line in the file The option "-f plain" tells igpp.docgen to treat the output
+         as plain text. The default for igpp.docgen is to treat the output as XML and to generate
+         well formatted XML (not what we want in this example).
+      </p>
+      <p>Running this command will generate a plain text that looks like:</p>
+<div class="code">
+<pre>
+Hello from the igpp.docgen project.
+I'm currently at version 1. I come in 3
+colors. They are:
+   red
+   green
+   blue
+</pre>
+</div>
+</div><!-- span -->
+<script>footer();</script>
+</div><!-- container -->
+</body>
+</html>

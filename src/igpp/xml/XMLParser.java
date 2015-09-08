@@ -103,7 +103,7 @@ public class XMLParser {
 	}
     
     /** 
-     * Parses a file containing XML into its constitute elments and
+     * Parses a file containing XML into its constitute elements and
      * sets internal variables with the contents of the file.
      * The path and name of the file are passed to the method which is
      * opened and parsed. 

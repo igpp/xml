@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+   <title>igpp.docgen/Example/PDS3 Generate</title>
+   <meta name="author" content="Todd King" />
+   <meta http-equiv="Content-Language" content="en" />
+   <link rel="stylesheet" href="../../style.css" type="text/css" media="screen" />
+   <script type="text/javascript" src="../../template.js"> </script>
+   <script type="text/javascript" src="sidebar.js"> </script>
+</head>
+<body>
+<div class="container">
+   <script>header();</script>
+   <script>sidebar();</script>
+   <div class="span9 content">
+   	<h3>Scenario</h3>
+   	<p>
+      Create a PDS3 label that describes a data table.
+      </p>
+      <hr/>
+      <p>Our data is a table contains a time series of data.
+         It has four fields: time stamp and and 3D vector.
+         We want to create an PDS3 label that describes the
+         data table.
+      </p>
+      <p>Our data table looks like:</p>
+<div class="code">
+<pre>
+2012-01-01T00:00:30      0.488     -0.866     -2.537
+2012-01-01T00:01:30      0.521     -0.833     -2.616
+2012-01-01T00:02:30      0.412     -1.025     -2.658
+2012-01-01T00:03:30      0.534     -0.978     -2.743
+2012-01-01T00:04:30      0.591     -0.939     -2.755
+2012-01-01T00:05:30      0.546     -0.876     -2.680
+2012-01-01T00:06:30      0.643     -0.761     -2.702
+2012-01-01T00:07:30      0.969     -0.194     -2.483
+2012-01-01T00:08:30      1.007      0.131     -2.307
+2012-01-01T00:09:30      0.640     -0.626     -2.267
+2012-01-01T00:10:30      0.453     -1.074     -2.477
+2012-01-01T00:11:30      0.479     -0.966     -2.355
+2012-01-01T00:12:30      0.595     -0.789     -2.423
+</pre>
+</div>
+      <p>We will store this in a file called <a href="timeseries.tab">timeseries.tab</a>.</p>
+      <p>Since this a fixed width, plain text file without header information we need
+         additional information in order to describe the layout and content of the
+         table. For each field we will need know the name, units, data type, 
+         start byte, width, and a short description. We will also need to have 
+         a description of the data. A CSV file is a convienent way to store
+         this information. For the example table this would be:</p>
+<div class="code">
+<pre>
+# Cassini magnetic-field 1 minute averages for the year 2012 in RTN
+# coordinates. RTN coordinates consist of R (radial component, Sun to
+# the spacecraft), T (tangential component, parallel to the Solar
+# Equatorial plane and perpendicular to R), and N (normal component,
+# completes right handed set).
+#
+# These MAG data were processed (calibrated, rotated into RTN
+# coordinates, and averaged) by the Cassini MAG team at Imperial
+# College. They were provided to PDS by the MAG team Co-I at UCLA.
+# Trajectory and the number of points in the average were added at the
+# PDS/PPI node. For more information on this and previous versions,
+# please refer to the PDS catalog file for this data set
+# (CO_MAG_CAL_1MIN_DS.CAT).
+Name	Number	Unit	Data_Type	Start_Byte	Bytes	Description
+TIME	1	N/A	TIME	1	19	Spacecraft event time of the sample.
+BR	2	nT	ASCII_REAL	21	10	The radial component (R) points from the Sun to the spacecraft,positive away from the Sun.
+BT	3	nT	ASCII_REAL	32	10	RTN tangetial (T) component of the magnetic field in nT. T is parallel to the Solar Equatorial plane (Omega[Sun] x R).
+BPHI	4	nt	ASCII_REAL	42	10	RTN normal (N) component of the magnetic field in nT. N completes the right handed set, and is roughly normal to the Solar Equatorial plane.
+</pre>
+</div>         
+      <p>We will store this in a file called <a href="fields.csv">fields.csv</a>.</p>
+      <p>Our velocity template will be a PDS3 label with some information already filled in.
+         Information specific to the table (columns, record count, file size, etc.) will be generate
+         using igpp.docgen. Our template looks like:</p>
+<div class="code">
+<pre>
+PDS_VERSION_ID                = PDS3
+DATA_SET_ID                   = "CO-E/SW/J/S-MAG-4-SUMM-1MINAVG-V1.0"
+STANDARD_DATA_PRODUCT_ID      = "FGM L1B RTN 1MIN"
+PRODUCT_ID                    = "$File.getBaseName($options.data_file)"
+PRODUCT_TYPE                  = "DATA"
+PRODUCT_VERSION_ID            = "1"
+PRODUCT_CREATION_TIME         = 2013-03-03T19:56:41
+
+START_TIME                    = 2012-01-01T00:00:30
+STOP_TIME                     = 2012-01-01T00:22:30
+
+INSTRUMENT_HOST_NAME          = "CASSINI ORBITER"
+INSTRUMENT_HOST_ID            = "CO"
+MISSION_PHASE_NAME            = "EXTENDED-EXTENDED MISSION"
+TARGET_NAME                   = "SATURN"
+INSTRUMENT_NAME               = "DUAL TECHNIQUE MAGNETOMETER"
+INSTRUMENT_ID                 = "MAG"
+DESCRIPTION                   = "$layout.description"
+
+SPICE_FILE_NAME               = "CAS_2012.MK"
+
+^TABLE                        = "$options.data_file"
+MD5_CHECKSUM                  = "$File.getMD5($options.data_file)"
+RECORD_TYPE                   = FIXED_LENGTH
+RECORD_BYTES                  = $options.record_bytes
+FILE_RECORDS                  = $Calc.floor($Calc.perform($File.getSize($options.data_file), "/", $options.record_bytes))
+OBJECT                        = TABLE
+  INTERCHANGE_FORMAT          = "ASCII"
+  ROWS                        = $Calc.floor($Calc.perform($File.getSize($options.data_file), "/", $options.record_bytes))
+  COLUMNS                     = $layout.fields.size()
+  ROW_BYTES                   = $options.record_bytes
+  DESCRIPTION                 = ""
+  
+#foreach ($field in $layout.record)
+  OBJECT                      = COLUMN
+    NAME                      = "$field.Name"
+    COLUMN_NUMBER             = $field.Number
+    UNIT                      = "$field.Unit"
+    DATA_TYPE                 = $field.Data_Type
+    START_BYTE                = $field.Start_Byte
+    BYTES                     = $field.Bytes
+    DESCRIPTION               = "$field.Description"
+  END_OBJECT                  = COLUMN
+  
+#end
+END_OBJECT                    = TABLE
+END
+</pre>
+</div>
+      <p>We will store this in a file called <a href="example-pds3.vm">example-pds3.vm</a>.</p>
+      <p>In the template we expect information about the table (description and fields) to be in 
+         a context called "layout" and the name of the data file to be passed on the command-line
+         (which appears in the "options" context).
+         
+         This template uses methods to determine some information. For example, the MD5 checksum
+         is calcualted by calling the getMD5() method of the File context, passing the file name
+         provided on the command line. See: $File.getMD5($options.data_file). It also uses the
+         floor() and perform() methods of the Calc context to determine the number of records (rows)
+         in the file. Finally, it uses the getBaseName() method of the File context to
+         extract the base name of the data file and assigned it to the PRODUCT_ID which is 
+         a convention when creating PDS3 labels.
+      </p>
+      <p>Running igpp.docgen with the command:</p>
+<div class="code">
+java -jar igpp-docgen.jar data_file=timeseries.tab record_bytes=54 layout:fields.csv -f pds3 example-pds3.vm
+</div>
+      <p>Instructs igpp.docgen to parse the file "fields.csv" and place the results in a context
+         named "layout". Since the extension on "fields.csv" is ".csv" igpp.docgen will parse the
+         file as a set of tab separated values, creating a record for each non-commented line in 
+         the file. We also specify that the output should be well formatted PDS3 metadata (-f pds3).</p>
+      <p>Running this command will generate an XML document that looks like:</p>
+<div class="code">
+<pre>
+PDS_VERSION_ID               = PDS3
+DATA_SET_ID                  = "CO-E/SW/J/S-MAG-4-SUMM-1MINAVG-V1.0"
+STANDARD_DATA_PRODUCT_ID     = "FGM L1B RTN 1MIN"
+PRODUCT_ID                   = "timeseries"
+PRODUCT_TYPE                 = "DATA"
+PRODUCT_VERSION_ID           = "1"
+PRODUCT_CREATION_TIME        = 2013-03-03T19:56:41
+
+START_TIME                   = 2012-01-01T00:00:30
+STOP_TIME                    = 2012-01-01T00:22:30
+
+INSTRUMENT_HOST_NAME         = "CASSINI ORBITER"
+INSTRUMENT_HOST_ID           = "CO"
+MISSION_PHASE_NAME           = "EXTENDED-EXTENDED MISSION"
+TARGET_NAME                  = "SATURN"
+INSTRUMENT_NAME              = "DUAL TECHNIQUE MAGNETOMETER"
+INSTRUMENT_ID                = "MAG"
+DESCRIPTION                  = " Cassini magnetic-field 1 minute averages for th
+e year 2012 in RTN coordinates. RTN coordinates consist of R (radial component,
+Sun to the spacecraft), T (tangential component, parallel to the Solar Equatoria
+l plane and perpendicular to R), and N (normal component, completes right handed
+ set). These MAG data were processed (calibrated, rotated into RTN coordinates,
+and averaged) by the Cassini MAG team at Imperial College. They were provided to
+ PDS by the MAG team Co-I at UCLA. Trajectory and the number of points in the av
+erage were added at the PDS/PPI node. For more information on this and previous
+versions, please refer to the PDS catalog file for this data set (CO_MAG_CAL_1MI
+N_DS.CAT)."
+
+SPICE_FILE_NAME              = "CAS_2012.MK"
+
+^TABLE                       = "timeseries.tab"
+MD5_CHECKSUM                 = "708bf8cfd80f2a544543661bcaf2bb61"
+RECORD_TYPE                  = FIXED_LENGTH
+RECORD_BYTES                 = 54
+FILE_RECORDS                 = 23
+OBJECT                       = TABLE
+  INTERCHANGE_FORMAT         = "ASCII"
+  ROWS                       = 23
+  COLUMNS                    = 7
+  ROW_BYTES                  = 54
+  DESCRIPTION                = ""
+
+  OBJECT                     = COLUMN
+    NAME                     = "TIME"
+    COLUMN_NUMBER            = 1
+    UNIT                     = "N/A"
+    DATA_TYPE                = TIME
+    START_BYTE               = 1
+    BYTES                    = 19
+    DESCRIPTION              = "Spacecraft event time of the sample."
+  END_OBJECT                 = COLUMN
+
+  OBJECT                     = COLUMN
+    NAME                     = "BR"
+    COLUMN_NUMBER            = 2
+    UNIT                     = "nT"
+    DATA_TYPE                = ASCII_REAL
+    START_BYTE               = 21
+    BYTES                    = 10
+    DESCRIPTION              = "The radial component (R) points from the Sun to
+the spacecraft,positive away from the Sun."
+  END_OBJECT                 = COLUMN
+
+  OBJECT                     = COLUMN
+    NAME                     = "BT"
+    COLUMN_NUMBER            = 3
+    UNIT                     = "nT"
+    DATA_TYPE                = ASCII_REAL
+    START_BYTE               = 32
+    BYTES                    = 10
+    DESCRIPTION              = "RTN tangetial (T) component of the magnetic fiel
+d in nT. T is parallel to the Solar Equatorial plane (Omega[Sun] x R)."
+  END_OBJECT                 = COLUMN
+
+  OBJECT                     = COLUMN
+    NAME                     = "BPHI"
+    COLUMN_NUMBER            = 4
+    UNIT                     = "nt"
+    DATA_TYPE                = ASCII_REAL
+    START_BYTE               = 42
+    BYTES                    = 10
+    DESCRIPTION              = "RTN normal (N) component of the magnetic field i
+n nT. N completes the right handed set, and is roughly normal to the Solar Equat
+orial plane."
+  END_OBJECT                 = COLUMN
+
+END_OBJECT                   = TABLE
+END
+</pre>
+</div>
+</div><!-- span -->
+<script>footer();</script>
+</div><!-- container -->
+</body>
+</html>

@@ -1,0 +1,88 @@
+PDS_VERSION_ID               = PDS3
+DATA_SET_ID                  = "CO-E/SW/J/S-MAG-4-SUMM-1MINAVG-V1.0"
+STANDARD_DATA_PRODUCT_ID     = "FGM L1B RTN 1MIN"
+PRODUCT_ID                   = "timeseries"
+PRODUCT_TYPE                 = "DATA"
+PRODUCT_VERSION_ID           = "1"
+PRODUCT_CREATION_TIME        = 2013-03-03T19:56:41
+
+START_TIME                   = 2012-01-01T00:00:30
+STOP_TIME                    = 2012-01-01T00:22:30
+
+INSTRUMENT_HOST_NAME         = "CASSINI ORBITER"
+INSTRUMENT_HOST_ID           = "CO"
+MISSION_PHASE_NAME           = "EXTENDED-EXTENDED MISSION"
+TARGET_NAME                  = "SATURN"
+INSTRUMENT_NAME              = "DUAL TECHNIQUE MAGNETOMETER"
+INSTRUMENT_ID                = "MAG"
+DESCRIPTION                  = " Cassini magnetic-field 1 minute averages for th
+e year 2012 in RTN coordinates. RTN coordinates consist of R (radial component,
+Sun to the spacecraft), T (tangential component, parallel to the Solar Equatoria
+l plane and perpendicular to R), and N (normal component, completes right handed
+ set). These MAG data were processed (calibrated, rotated into RTN coordinates,
+and averaged) by the Cassini MAG team at Imperial College. They were provided to
+ PDS by the MAG team Co-I at UCLA. Trajectory and the number of points in the av
+erage were added at the PDS/PPI node. For more information on this and previous
+versions, please refer to the PDS catalog file for this data set (CO_MAG_CAL_1MI
+N_DS.CAT)."
+
+SPICE_FILE_NAME              = "CAS_2012.MK"
+
+^TABLE                       = "timeseries.tab"
+MD5_CHECKSUM                 = "708bf8cfd80f2a544543661bcaf2bb61"
+RECORD_TYPE                  = FIXED_LENGTH
+RECORD_BYTES                 = 54
+FILE_RECORDS                 = 23
+OBJECT                       = TABLE
+  INTERCHANGE_FORMAT         = "ASCII"
+  ROWS                       = 23
+  COLUMNS                    = 7
+  ROW_BYTES                  = 54
+  DESCRIPTION                = ""
+
+  OBJECT                     = COLUMN
+    NAME                     = "TIME"
+    COLUMN_NUMBER            = 1
+    UNIT                     = "N/A"
+    DATA_TYPE                = TIME
+    START_BYTE               = 1
+    BYTES                    = 19
+    DESCRIPTION              = "Spacecraft event time of the sample."
+  END_OBJECT                 = COLUMN
+
+  OBJECT                     = COLUMN
+    NAME                     = "BR"
+    COLUMN_NUMBER            = 2
+    UNIT                     = "nT"
+    DATA_TYPE                = ASCII_REAL
+    START_BYTE               = 21
+    BYTES                    = 10
+    DESCRIPTION              = "The radial component (R) points from the Sun to
+the spacecraft,positive away from the Sun."
+  END_OBJECT                 = COLUMN
+
+  OBJECT                     = COLUMN
+    NAME                     = "BT"
+    COLUMN_NUMBER            = 3
+    UNIT                     = "nT"
+    DATA_TYPE                = ASCII_REAL
+    START_BYTE               = 32
+    BYTES                    = 10
+    DESCRIPTION              = "RTN tangetial (T) component of the magnetic fiel
+d in nT. T is parallel to the Solar Equatorial plane (Omega[Sun] x R)."
+  END_OBJECT                 = COLUMN
+
+  OBJECT                     = COLUMN
+    NAME                     = "BPHI"
+    COLUMN_NUMBER            = 4
+    UNIT                     = "nt"
+    DATA_TYPE                = ASCII_REAL
+    START_BYTE               = 42
+    BYTES                    = 10
+    DESCRIPTION              = "RTN normal (N) component of the magnetic field i
+n nT. N completes the right handed set, and is roughly normal to the Solar Equat
+orial plane."
+  END_OBJECT                 = COLUMN
+
+END_OBJECT                   = TABLE
+END

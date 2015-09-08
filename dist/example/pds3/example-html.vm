@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p>
+$label.DESCRIPTION
+</p>
+#foreach ($table in $label.TABLE)
+<table border="1">
+   <thead>
+   <tr>
+      <th>Name</th><th>DataType</th><th>Bytes</th><th>StartByte</th>
+   </tr>
+   </thead>
+   <tbody>
+#foreach( $column in $table.COLUMN) 
+   <tr>
+      <td>$column.NAME</td>
+      <td>$column.DATA_TYPE</td>
+      <td>$column.BYTES</td>
+      <td>$column.START_BYTE</td>
+   </tr>
+#end
+   </tbody>
+</table>
+#end

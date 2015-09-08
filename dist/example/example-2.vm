@@ -1,0 +1,33 @@
+<Doc>
+   <name>$list.name</name>
+   <version>$Integer.parseInt($list.version)</version>
+   <project>$list.project</project>
+   <project-type>$type.get($list.project)</project-type>
+   <description>Hello from $list.name in the $list.project project.
+   This is text just the way I want it to appear.
+   
+   Blank line above. Indent below
+       indented.
+   </description>
+   <extra>Extra stuff with different namespace.</extra>
+   
+   #if($list.project.size())
+   <ArrayList/>
+   #end
+   <project-size>$list.project.size()</project-size>
+   
+   <multi>
+   #foreach ($item in $list.multi)
+      <item>$item</item>
+   #end
+   </multi>
+   
+   <records>${table.record.size()}</records>
+   #foreach ($record in $table.record) 
+   <record>
+   <name>$record.name</name>
+   <project>$record.project</project>
+   <version>$record.version</version>
+   </record>
+   #end
+</Doc>

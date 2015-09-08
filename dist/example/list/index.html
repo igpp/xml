@@ -1,0 +1,50 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+   <title>igpp.docgen/Example/List</title>
+   <meta name="author" content="Todd King" />
+   <meta http-equiv="Content-Language" content="en" />
+   <link rel="stylesheet" href="../../style.css" type="text/css" media="screen" />
+   <script type="text/javascript" src="../../template.js"> </script>
+   <script type="text/javascript" src="sidebar.js"> </script>
+</head>
+<body>
+<div class="container">
+   <script>header();</script>
+   <script>sidebar();</script>
+   <div class="span9 content">
+   	<p>
+      These examples illustrate how to use the igpp.docgen tool with list data.
+      </p>
+      <p>List data is a set of value assignments to keywords. This is a common
+         way of expressing parameters and has the form:
+      </p>
+      <div class="code">
+<pre>
+keyword = value
+</pre>
+      </div>
+      <p>igpp.docgen supports both single value and multi-value parameters. 
+         A set of values can be assigned to a keyword by enclosing a comma separated
+         list of values inside curly braces ({}). For example:
+      </p>
+      <div class="code">
+<pre>
+colors = {red, green, blue}
+</pre>
+      </div>
+      <p>assigns the three values {red, green, blue} to "colors"
+      </p>
+      <p>igpp.docgen also allows comments in a list file. Any line which begins with "#"
+         is considered a comment and ignored by the parser.
+      </p>
+      <h3>Example Use</h3>
+      <dt><a href="narrative.html">Narrative</a></dt>
+      <dd>Using a list of parameters generate a narrative to describe a project.
+      </dd>
+   </div> <!-- content -->
+<script>footer();</script>
+
+</div><!-- container -->
+</body>
+</html>

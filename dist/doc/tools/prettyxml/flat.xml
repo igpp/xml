@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<doc>
+<name>John</name>
+<sibling>
+<name>Paul</name>
+<child>
+<name>William</name>
+</child>
+</sibling>
+</doc>

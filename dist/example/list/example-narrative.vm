@@ -1,0 +1,6 @@
+Hello from the $list.project project.
+I'm currently at version $list.version. I come in $list.colors.size()
+colors. They are:
+#foreach ($item in $list.colors)
+   $item
+#end

@@ -50,7 +50,7 @@ public class ToPDF
         	
    			// Process arguments looking for variable context
         	if(line.getArgs().length != 1) {
-        		System.out.println("Pass the file to transform as a plain command-line argument.");
+        		me.showHelp();
         		return;
         	}
         	

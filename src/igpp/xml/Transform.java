@@ -8,6 +8,10 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.transform.stream.StreamResult;
 
+
+
+
+
 //import java.io.*;
 import java.io.Reader;
 import java.io.File;
@@ -26,17 +30,42 @@ import java.net.URLConnection;
 import java.util.HashMap;
 
 //import java.servlet.jsp.*;
+
+
+
+
 import javax.servlet.jsp.JspWriter;
-    
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.PosixParser;
+ 
 /**
- * Transform an XML file using a stylsheet (XSL)
+ * Transform an XML file using a stylesheet (XSL)
  *
  * @author Todd King
  * @version 1.00 2006
  */
 public class Transform 
 {
-	String	mVersion = "1.0.2";
+	private String	mVersion = "1.0.2";
+	private String mOverview = "Transform an XML file using a stylesheet (XSL)."
+			 ;
+	private String mAcknowledge = "Development funded by NASA's PDS project at UCLA.";
+
+	private static boolean mVerbose= false;
+	
+	// create the Options
+	Options mAppOptions = new org.apache.commons.cli.Options();
+
+	public Transform() {
+		mAppOptions.addOption( "h", "help", false, "Dispay this text" );
+		mAppOptions.addOption( "v", "verbose", false, "Verbose. Show status at each step." );
+		mAppOptions.addOption( "s", "stylesheet", true, "Stylesheet. The XML style sheet." );
+	}
+
 	/** 
     * Command-line interface
 	 * 
@@ -46,24 +75,64 @@ public class Transform
     **/
 	static public void main(String[] args) 
 	{
+		String stylesheet = null;
+		
 		Transform me = new Transform();
-		
-		if(args.length < 2) {
-			System.out.println("Version: " + me.mVersion);
-			System.out.println("Usage: " + me.getClass().getName() + " {xmlFile} {xslFile}");
-			System.exit(1);
-		}
-		
+
+		CommandLineParser parser = new PosixParser();
 		try {
-			if(args[0].startsWith("http:")) {
-				Transform.perform(getURLSource(args[0]), args[1], System.out);
+            CommandLine line = parser.parse(me.mAppOptions, args);
+
+   			if(line.hasOption("h")) me.showHelp();
+   			if(line.hasOption("v")) mVerbose = true;
+   			if(line.hasOption("s")) stylesheet = line.getOptionValue("s");
+		
+			if(stylesheet == null) {
+	    		me.showHelp();
+	    		return;			
+			}
+
+  			// Process arguments looking for variable context
+        	if(line.getArgs().length != 1) {
+        		me.showHelp();
+        		return;
+        	}
+        	
+        	String filename = line.getArgs()[0];
+        	
+			if(filename.startsWith("http:")) {
+				Transform.perform(getURLSource(filename), stylesheet, System.out);
 			} else {
-				Transform.perform(args[0], args[1], System.out);
+				Transform.perform(filename, stylesheet, System.out);
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * Display help information.
+	 **/
+	public void showHelp()
+	{
+		System.out.println("");
+		System.out.println(getClass().getName() + "; Version: " + mVersion);
+		System.out.println(mOverview);
+		System.out.println("");
+		System.out.println("Usage: java " + getClass().getName() + " [options] file");
+		System.out.println("");
+		System.out.println("Options:");
+
+		// automatically generate the help statement
+		HelpFormatter formatter = new HelpFormatter();
+		formatter.printHelp(getClass().getName(), mAppOptions);
+
+		System.out.println("");
+		System.out.println("Acknowledgements:");
+		System.out.println(mAcknowledge);
+		System.out.println("");
+	}
+
 
 	/** 
 	 * Get a new transformer based on a stylesheet

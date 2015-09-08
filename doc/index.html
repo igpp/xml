@@ -1,0 +1,112 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>${options.base}</title>
+    <meta name="author" content="Todd King" />
+    <meta http-equiv="Content-Language" content="en" />
+    <link rel="stylesheet" href="style.css" type="text/css" />
+    <script type="text/javascript" src="template.js"> </script>
+    <script type="text/javascript" src="sidebar.js"> </script>
+   </head>
+   <body>
+<div class="container">
+   <script>header();</script>
+   <script>sidebar();</script>
+   <div class="span9 content">
+      <div class="alert alert-success">
+         <strong>Version: ${options.version}</strong>
+      </div>
+      
+      <h1><a name="About">About ${options.base}</a></h1>
+      <p>
+      The ${options.base} is a collection of Java classes to simplify processing of XML files. 
+	  It also contains a set of command-line <a href="tools/index.html">tools</a> that are easier to use than other common XML processing
+	  tools like <a href="http://xmlsoft.org/xmllint.html">xmllint</a> and other tools found in < href=http://xmlsoft.org">libxml2</a>.
+	  </p>
+	  <p>This package contains the following command-line tools: <br>
+	  <div class="indent">
+	  <table>
+		<tr><td><a href="tools/prettyxml/index.html">prettyxml</a></td><td>Converts XML to pretty XML.</td></tr>
+		<tr><td><a href="tools/toxhtml/index.html">toxhtml</a></td><td>Converts an HTML file into a compliant XHTML file.</td></tr>
+		<tr><td><a href="tools/topdf/index.html">topdf</a></td><td>Convert an XHTML file into a PDF file.</td></tr>
+		<tr><td><a href="tools/transform/index.html">transform</a></td><td>Transform an XML file using a stylesheet (XSL).</td></tr>
+		<tr><td><a href="tools/xmlgrep/index.html">xmlgrep</a></td><td>An XML aware grep tool that can search for elements (tags) that match a pattern as well as search the content of elements (tags) that match a pattern.<</td></tr>
+		</table>
+		</div>
+
+      </p>
+   
+      <h1><a name="Requirements">System Requirements</a></h1>
+      <p>
+       The ${options.base} tool was developed using Java and will run on any platform with a supported 
+       Java Runtime Environment (JRE). The software was specifically developed under Java version 1.6 
+       and has only been tested with this version. You can determine which version of Java you are running
+       with the command:
+       <div class="code">
+          <pre>% java -version</pre>
+          <pre>java version "1.6.0_26"</pre>
+          <pre>Java(TM) SE Runtime Environment (build 1.6.0_26-b03-384-10M3425)</pre>
+          <pre>Java HotSpot(TM) 64-Bit Server VM (build 20.1-b02-384, mixed mode)</pre>
+       </div>
+      </p>
+      
+      <h1><a name="Unpacking">Unpacking the Package</a></h1>
+      <p><a href="${options.package}-${options.version}.zip">Download</a> the <i>${options.base}</i> package from the IGPP 
+      	<a class="externalLink" href="http://${options.host}/${options.home}" target="_blank">web site</a> 
+      	site. The binary distribution is available in identical zip or tar/gzip packages. 
+      	The installation directory may vary from environment to environment but in UNIX-based environments 
+      	it is typical to install software packages in the <i>/usr/local</i> directory and in Windows-based 
+      	environments it is typical to install software packages in the <i>C:\Program Files</i> directory. 
+      	Unpack the selected binary distribution file with the following command:
+      </p>
+      <div class="code">
+          <pre>% unzip ${options.package}-${options.version}.zip</pre>
+      </div>
+      <p>The unzip will result in the creation of the <i>${options.package}-${options.version}</i> directory 
+      	with the following directory structure:
+      </p>
+      <ul>
+        <li><b>README.txt</b><br/>
+          <p>A README file directing the user to the available documentation for the project.
+          </p>
+        </li>
+        <li><b>LICENSE.txt</b><br/>
+          <p>The copyright notice from the <a class="externalLink" href="http://regents.universityofcalifornia.edu//" target="_blank">Regents of the University of California</a> detailing the restrictions regarding the use and distribution of this software. Although the license is strictly worded, the software has been classified as Technology and Software Publicly Available (TSPA) and is available for <i>anyone</i> to download and use.
+          </p>
+        </li>
+        <li><b>bin/</b><br/>
+          <p>This directory contains batch and shell scripts for executing the tool.
+          </p>
+        </li>
+        <li><b>doc/</b><br/>
+          <p>This directory contains documentation, api javadoc, and other related information. 
+          </p>
+        </li>
+        <li><b>example/</b><br/>
+          <p>This directory contains examples of using the tool.
+          </p>
+        </li>
+        <li><b>lib/</b><br/>
+          <p>This directory contains the dependent jar files for the tool along with the executable jar file (${options.package}-${options.version}.jar) containing the ${options.package} tool software.
+          </p>
+        </li>
+      </ul>
+    
+      <h1><a name="Using">Using the Tools</a></h1>
+      <p>
+      Shell scripts to run the tool are in the "bin" directory in the distribution. You can run the tool on a 
+      Linux system with the command:
+         <div class="code">
+            <pre>% ${options.command}</pre>
+         </div>
+      or on a Windows system with the command:
+         <div class="code">
+            <pre>% ${options.command}.bat</pre>
+         </div>
+      See <a href="tools/index.html">examples</a> for how to use all the tools.
+      </p>
+   </div><!-- span -->
+<script>footer();</script>
+</div><!-- container -->
+</body>
+</html>

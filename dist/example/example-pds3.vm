@@ -1,0 +1,85 @@
+PDS_VERSION_ID               = PDS3
+LIST = {$list.multi}
+OBJECT                       = HFRA_CAL_LEVELS_AGC_TABLE
+  INTERCHANGE_FORMAT         = ASCII
+  ROW_BYTES                  = 140
+  ROWS                       = 4
+  COLUMNS                    = 2
+  DESCRIPTION                = ""
+  OBJECT                     = COLUMN
+    NAME                     = CALIBRATION_LEVEL
+    DATA_TYPE                = CHARACTER
+    START_BYTE               = 1
+    BYTES                    = 6
+    DESCRIPTION              = "HFR internal calibration active antenna stimulus."
+  END_OBJECT                 = COLUMN
+
+  OBJECT                     = COLUMN
+    NAME                     = CAL_LEVEL
+    DATA_TYPE                = ASCII_REAL
+    START_BYTE               = 7
+    BYTES                    = 96
+    ITEMS                    = 12
+    ITEM_BYTES               = 8
+    DESCRIPTION              = "Calibration data from each of twelve calibration   
+                           levels for HFR bands A, B, or C."
+  END_OBJECT                 = COLUMN
+END_OBJECT                   = HFRA_CAL_LEVELS_AGC_TABLE
+
+OBJECT                       = HFRA_CAL_LEVELS_AUTOEU_TABLE
+  INTERCHANGE_FORMAT         = ASCII
+  ROW_BYTES                  = 140
+  ROWS                       = 12
+  COLUMNS                    = 2
+  DESCRIPTION                = ""
+  OBJECT                     = COLUMN
+    NAME                     = CALIBRATION_LEVEL
+    DATA_TYPE                = CHARACTER
+    START_BYTE               = 1
+    BYTES                    = 6
+    DESCRIPTION              = "HFR internal calibration stimulus level and        
+                           attenuator state."
+  END_OBJECT                 = COLUMN
+
+  OBJECT                     = COLUMN
+    NAME                     = FILTERS
+    DATA_TYPE                = ASCII_REAL
+    START_BYTE               = 7
+    BYTES                    = 128
+    ITEMS                    = 16
+    ITEM_BYTES               = 8
+    DESCRIPTION              = "Calibration data from each of sixteen filters for  
+                           HFR bands A, B, or C."
+  END_OBJECT                 = COLUMN
+  
+END_OBJECT                   = HFRA_CAL_LEVELS_AUTOEU_TABLE
+
+OBJECT                       = HFRA_CAL_LEVELS_AUTOEW_TABLE
+  INTERCHANGE_FORMAT         = ASCII
+  ROW_BYTES                  = 140
+  ROWS                       = 12
+  COLUMNS                    = 2
+  DESCRIPTION                = ""
+  OBJECT                     = COLUMN
+    NAME                     = CALIBRATION_LEVEL
+    DATA_TYPE                = CHARACTER
+    START_BYTE               = 1
+    BYTES                    = 6
+    DESCRIPTION              = "HFR internal calibration stimulus level and        
+                           attenuator state."
+  END_OBJECT                 = COLUMN
+
+  OBJECT                     = COLUMN
+    NAME                     = FILTERS
+    DATA_TYPE                = ASCII_REAL
+    START_BYTE               = 7
+    BYTES                    = 128
+    ITEMS                    = 16
+    ITEM_BYTES               = 8
+    DESCRIPTION              = "Calibration data from each of sixteen filters for  
+                           HFR bands A, B, or C."
+  END_OBJECT                 = COLUMN
+  
+END_OBJECT                   = HFRA_CAL_LEVELS_AUTOEW_TABLE
+
+END

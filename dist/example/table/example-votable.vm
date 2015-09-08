@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!-- Example use of table data with Velocity -->
+<!-- Converts any CSV table to a VOTable -->
+<VOTABLE version="1.3">
+  <RESOURCE name="$table.name">
+    <TABLE name="results">
+      <DESCRIPTION>$table.description</DESCRIPTION>
+#foreach ($field in $table.fields) 
+      <FIELD name="$field" datatype="char" />
+#end
+      <DATA>
+        <TABLEDATA>
+#foreach ($record in $table.record)
+        <TR>
+#foreach ($field in $table.fields) 
+         <TD>$record[$field]</TD>
+#end
+        </TR>
+#end
+        </TABLEDATA>
+      </DATA>
+    </TABLE>
+  </RESOURCE>
+</VOTABLE>
